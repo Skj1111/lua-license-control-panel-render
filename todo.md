@@ -26,3 +26,5 @@
 - [x] Save a final project checkpoint and deliver the project version with an honest verification summary.
 - [x] Inspect the supplied BRPlayerCharacterBase-Merged.lua and update only its panel integration for the published independent domain, preserving all existing gameplay features.
 - [x] Syntax-check the updated supplied Lua and verify its canonical validation endpoint configuration before delivery.
+- [x] Inspect the newly supplied BRPlayerCharacterBase.lua and update only its panel integration for the published independent domain, preserving all existing feature code.
+- [x] Syntax-check the updated BRPlayerCharacterBase.lua and verify its canonical endpoint configuration before delivery.
