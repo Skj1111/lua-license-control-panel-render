@@ -1,262 +1,41 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
-import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
-import { CSSProperties, useEffect, useRef, useState } from "react";
-import { useLocation } from "wouter";
-import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
-import { Button } from "./ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
+import { Link } from "wouter";
+import { LayoutDashboard, LoaderCircle, LogOut, ShieldCheck } from "lucide-react";
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
-];
-
-const SIDEBAR_WIDTH_KEY = "sidebar-width";
-const DEFAULT_WIDTH = 280;
-const MIN_WIDTH = 200;
-const MAX_WIDTH = 480;
-
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [sidebarWidth, setSidebarWidth] = useState(() => {
-    const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
-    return saved ? parseInt(saved, 10) : DEFAULT_WIDTH;
-  });
-  const { loading, user } = useAuth();
-
-  useEffect(() => {
-    localStorage.setItem(SIDEBAR_WIDTH_KEY, sidebarWidth.toString());
-  }, [sidebarWidth]);
-
-  if (loading) {
-    return <DashboardLayoutSkeleton />
-  }
-
-  if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Sign in to continue
-            </h1>
-            <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Access to this dashboard requires authentication. Continue to launch the login flow.
-            </p>
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { user, loading, logout } = useAuth();
+  const identity = trpc.dashboard.identity.useQuery(undefined, { enabled: Boolean(user) });
+  if (loading) return (
+    <div className="cyber-grid min-h-screen bg-[#07070b] px-5 text-slate-100">
+      <div className="mx-auto grid min-h-screen max-w-md place-items-center">
+        <div className="hud-panel w-full overflow-hidden p-0">
+          <div className="h-1 bg-gradient-to-r from-cyan-300 via-pink-400 to-cyan-300" />
+          <div className="space-y-6 p-7 sm:p-9">
+            <div className="flex items-center justify-between"><div className="brand-mark">LX</div><p className="eyebrow">AUTHENTICATION BUS // ONLINE</p></div>
+            <div><p className="eyebrow">CONTROL GRID INITIALIZATION</p><h1 className="neon-heading mt-3 text-3xl">VERIFYING SESSION</h1><p className="mt-3 max-w-sm text-sm leading-6 text-slate-400">Securely loading your account permissions, license registry, and management controls.</p></div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs uppercase tracking-[.16em] text-cyan-200"><span>Session handshake</span><span className="flex items-center gap-2"><LoaderCircle className="h-3.5 w-3.5 animate-spin" /> active</span></div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-cyan-300/10"><div className="h-full w-2/3 animate-pulse bg-gradient-to-r from-cyan-300 to-pink-400" /></div>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-[10px] uppercase tracking-[.14em] text-slate-500"><span>Roles</span><span>Bindings</span><span className="text-right">Policies</span></div>
           </div>
-          <Button
-            onClick={() => startLogin()}
-            size="lg"
-            className="w-full shadow-lg hover:shadow-xl transition-all"
-          >
-            Sign in
-          </Button>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": `${sidebarWidth}px`,
-        } as CSSProperties
-      }
-    >
-      <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
-        {children}
-      </DashboardLayoutContent>
-    </SidebarProvider>
+    </div>
   );
-}
-
-type DashboardLayoutContentProps = {
-  children: React.ReactNode;
-  setSidebarWidth: (width: number) => void;
-};
-
-function DashboardLayoutContent({
-  children,
-  setSidebarWidth,
-}: DashboardLayoutContentProps) {
-  const { user, logout } = useAuth();
-  const [location, setLocation] = useLocation();
-  const { state, toggleSidebar } = useSidebar();
-  const isCollapsed = state === "collapsed";
-  const [isResizing, setIsResizing] = useState(false);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const activeMenuItem = menuItems.find(item => item.path === location);
-  const isMobile = useIsMobile();
-
-  useEffect(() => {
-    if (isCollapsed) {
-      setIsResizing(false);
-    }
-  }, [isCollapsed]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isResizing) return;
-
-      const sidebarLeft = sidebarRef.current?.getBoundingClientRect().left ?? 0;
-      const newWidth = e.clientX - sidebarLeft;
-      if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
-        setSidebarWidth(newWidth);
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsResizing(false);
-    };
-
-    if (isResizing) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-      document.body.style.cursor = "col-resize";
-      document.body.style.userSelect = "none";
-    }
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-    };
-  }, [isResizing, setSidebarWidth]);
-
-  return (
-    <>
-      <div className="relative" ref={sidebarRef}>
-        <Sidebar
-          collapsible="icon"
-          className="border-r-0"
-          disableTransition={isResizing}
-        >
-          <SidebarHeader className="h-16 justify-center">
-            <div className="flex items-center gap-3 px-2 transition-all w-full">
-              <button
-                onClick={toggleSidebar}
-                className="h-8 w-8 flex items-center justify-center hover:bg-accent rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
-                aria-label="Toggle navigation"
-              >
-                <PanelLeft className="h-4 w-4 text-muted-foreground" />
-              </button>
-              {!isCollapsed ? (
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-semibold tracking-tight truncate">
-                    Navigation
-                  </span>
-                </div>
-              ) : null}
-            </div>
-          </SidebarHeader>
-
-          <SidebarContent className="gap-0">
-            <SidebarMenu className="px-2 py-1">
-              {menuItems.map(item => {
-                const isActive = location === item.path;
-                return (
-                  <SidebarMenuItem key={item.path}>
-                    <SidebarMenuButton
-                      isActive={isActive}
-                      onClick={() => setLocation(item.path)}
-                      tooltip={item.label}
-                      className={`h-10 transition-all font-normal`}
-                    >
-                      <item.icon
-                        className={`h-4 w-4 ${isActive ? "text-primary" : ""}`}
-                      />
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarContent>
-
-          <SidebarFooter className="p-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 rounded-lg px-1 py-1 hover:bg-accent/50 transition-colors w-full text-left group-data-[collapsible=icon]:justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <Avatar className="h-9 w-9 border shrink-0">
-                    <AvatarFallback className="text-xs font-medium">
-                      {user?.name?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
-                    <p className="text-sm font-medium truncate leading-none">
-                      {user?.name || "-"}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate mt-1.5">
-                      {user?.email || "-"}
-                    </p>
-                  </div>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={logout}
-                  className="cursor-pointer text-destructive focus:text-destructive"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarFooter>
-        </Sidebar>
-        <div
-          className={`absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-primary/20 transition-colors ${isCollapsed ? "hidden" : ""}`}
-          onMouseDown={() => {
-            if (isCollapsed) return;
-            setIsResizing(true);
-          }}
-          style={{ zIndex: 50 }}
-        />
-      </div>
-
-      <SidebarInset>
-        {isMobile && (
-          <div className="flex border-b h-14 items-center justify-between bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
-            <div className="flex items-center gap-2">
-              <SidebarTrigger className="h-9 w-9 rounded-lg bg-background" />
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col gap-1">
-                  <span className="tracking-tight text-foreground">
-                    {activeMenuItem?.label ?? "Menu"}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        <main className="flex-1 p-4">{children}</main>
-      </SidebarInset>
-    </>
-  );
+  if (!user) return <div className="min-h-screen bg-[#07070b] grid place-items-center p-6"><div className="hud-panel max-w-md w-full p-8 text-center"><p className="eyebrow">AUTH GATE // 01</p><h1 className="neon-heading text-3xl mt-3">ACCESS REQUIRED</h1><p className="mt-4 text-slate-400">Sign in with your own email account. New admins must sign in first, then redeem the referral code provided by the owner.</p><Button className="mt-7 w-full cyber-button" onClick={() => startLogin()}>SIGN IN</Button></div></div>;
+  const isOwner = identity.data?.role === "super_owner" || identity.data?.role === "owner" || user.role === "owner" || user.openId === import.meta.env.VITE_OWNER_OPEN_ID;
+  const isSuperOwner = identity.data?.role === "super_owner";
+  const roleLabel = identity.data?.role === "super_owner" ? "super owner" : isOwner ? "owner" : identity.data?.role ?? user.role;
+  const displayName = identity.data?.username || user.name || user.email;
+  const displayEmail = identity.data?.email || user.email;
+  const switchAccount = async () => {
+    await logout();
+    startLogin();
+  };
+  return <div className="min-h-screen bg-[#07070b] text-slate-100 cyber-grid"><aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-cyan-400/20 bg-[#090910]/95 p-5 lg:block"><div className="flex items-center gap-3 mb-12"><div className="brand-mark">LX</div><div><p className="font-display text-lg tracking-[.2em] text-cyan-200">LICENSE//X</p><p className="text-[10px] tracking-[.24em] text-pink-400">CONTROL PANEL</p></div></div><nav className="space-y-2"><Link href="/" className="nav-active"><LayoutDashboard className="h-4 w-4" /> Overview</Link><Link href="/#key-registry" className="nav-item"><ShieldCheck className="h-4 w-4" /> Key registry</Link>{isSuperOwner && <Link href="/super-owner" className="nav-item"><ShieldCheck className="h-4 w-4" /> Super Owner overview</Link>}</nav><div className="absolute bottom-5 left-5 right-5 hud-divider pt-4"><div className="flex items-center gap-3"><Avatar className="h-9 w-9 border border-pink-400/40"><AvatarFallback className="bg-pink-500/10 text-pink-200">{displayName?.[0] ?? "U"}</AvatarFallback></Avatar><div className="min-w-0"><p className="truncate text-sm text-cyan-100">{displayName}</p><p className="truncate text-[10px] text-slate-500">{displayEmail}</p><p className="text-[10px] uppercase tracking-[.18em] text-pink-300">{roleLabel}</p></div><button className="ml-auto text-slate-500 hover:text-pink-300" onClick={logout} aria-label="Sign out" title="Sign out"><LogOut className="h-4 w-4" /></button></div><button className="mt-3 w-full text-left text-[10px] uppercase tracking-[.16em] text-cyan-300 hover:text-white" onClick={switchAccount}>Sign in with another account</button></div></aside><main className="min-h-screen lg:pl-72"><div className="mx-auto max-w-[1600px] p-5 sm:p-8"><div className="mb-5 flex items-center justify-between rounded border border-cyan-300/15 bg-cyan-300/5 px-4 py-3 lg:hidden"><div className="min-w-0"><p className="truncate text-xs text-cyan-100">{displayName}</p><p className="truncate text-[10px] text-slate-500">{displayEmail}</p><p className="text-[10px] uppercase tracking-[.18em] text-pink-300">ACTIVE SESSION // {roleLabel}</p></div><button className="text-slate-300 hover:text-pink-300" onClick={switchAccount} aria-label="Sign in with another account" title="Sign in with another account"><LogOut className="h-4 w-4" /></button></div>{children}</div></main></div>;
 }

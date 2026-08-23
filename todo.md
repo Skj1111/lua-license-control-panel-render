@@ -1,0 +1,24 @@
+# Project TODO
+
+- [x] Review the reference source contract, API routes, schema, tests, and Merged Lua artifact without copying any source credentials or production data.
+- [x] Define fresh Drizzle tables for expanded user roles, access status, licenses, hashed device bindings, referrals, audit records, maintenance, announcements, Telegram mappings, and single-use tickets.
+- [x] Apply the fresh database migration and verify the resulting schema.
+- [x] Implement server-enforced Super Owner, Owner, and Admin permissions with referral-based onboarding and scoped management.
+- [x] Implement server-authoritative license generation, expiry, activation-duration, status, search, copy-ready key JSON, safe deletion, and audit logging.
+- [x] Implement POST /api/license/validate with JSON request validation, fail-closed outcomes, hashed device identities, safe replacement rules, no-store headers, and rate limiting.
+- [x] Implement license device usage counts, safe unbinding, and the server-side device ownership policy without retaining raw device IDs.
+- [x] Implement compatible maintenance, transport diagnostics, and active-announcement HTTP routes for the Lua presentation flow.
+- [x] Implement the isolated optional Telegram extension with strict HTTPS link validation, explicit key mappings, device-bound hashed tickets, atomic redemption, and no fallback mapping.
+- [x] Add a compile-ready Merged Lua integration artifact preserving preflight, host-first identity resolution, saved-key, maintenance, announcement, Telegram, and fail-closed main-code gate behavior.
+- [x] Build the responsive cyberpunk administration dashboard using the supplied dashboard component and accessible management screens for all required areas.
+- [x] Add loading, empty, validation-error, permission-error, and mobile-responsive dashboard states without fabricated user or license data.
+- [x] Write and run Vitest coverage for license validation, role boundaries, device binding, announcement, maintenance, and Telegram security flows.
+- [x] Run TypeScript and production build validation, inspect key interface screens, and document deployment, secrets, HTTPS domain, and Android runtime verification requirements.
+- [x] Add and verify a visible API diagnostics area in the authenticated dashboard.
+- [x] Add explicit protected-page permission-error and management-form validation-error states, then test them.
+- [ ] Inspect the authenticated overview, registry, bindings, referrals, user roles, and Super Owner management surfaces before final delivery.
+- [x] Add visible invalid-form guidance for license generation and management updates, then cover the behavior with regression tests.
+- [x] Add behavior-level regression tests proving invalid generation and management input blocks the corresponding submission path.
+- [x] Add jsdom component-interaction coverage proving invalid generation and management submissions show the alert and do not invoke their tRPC mutations.
+- [ ] Verify the authenticated Overview, Key Registry, Device Bindings, Referrals, User Roles, API Diagnostics, Super Owner, Maintenance, and Announcement screens in a browser session that holds the owner cookie.
+- [ ] Save a final project checkpoint and deliver the project version with an honest verification summary.

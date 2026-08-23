@@ -1,4 +1,6 @@
-import { COOKIE_NAME, ONE_YEAR_MS, OAUTH_STATE_COOKIE, decodeOAuthState } from "@shared/const";
+import crypto from "node:crypto";
+import { COOKIE_NAME, ONE_YEAR_MS, OAUTH_STATE_COOKIE, decodeOAuthState, encodeOAuthState } from "@shared/const";
+import { ENV } from "./env";
 import { parse as parseCookieHeader } from "cookie";
 import type { Express, Request, Response } from "express";
 import * as db from "../db";
@@ -11,6 +13,25 @@ function getQueryParam(req: Request, key: string): string | undefined {
 }
 
 export function registerOAuthRoutes(app: Express) {
+  app.get("/api/oauth/start", (req: Request, res: Response) => {
+    const protocol = (req.get("x-forwarded-proto") ?? req.protocol).split(",")[0];
+    const host = req.get("x-forwarded-host") ?? req.get("host");
+    if (!host) {
+      res.status(400).json({ error: "host is required" });
+      return;
+    }
+    const redirectUri = `${protocol}://${host}/api/oauth/callback`;
+    const nonce = crypto.randomUUID();
+    const state = encodeOAuthState({ redirectUri, nonce });
+    res.cookie(OAUTH_STATE_COOKIE, nonce, { path: "/", secure: true, sameSite: "none", httpOnly: true, maxAge: 600_000 });
+    const portal = new URL(`${ENV.oAuthPortalUrl}/app-auth`);
+    portal.searchParams.set("appId", ENV.appId);
+    portal.searchParams.set("redirectUri", redirectUri);
+    portal.searchParams.set("state", state);
+    portal.searchParams.set("type", "signIn");
+    res.redirect(302, portal.toString());
+  });
+
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
     const state = getQueryParam(req, "state");

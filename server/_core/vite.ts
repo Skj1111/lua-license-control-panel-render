@@ -22,6 +22,9 @@ export async function setupVite(app: Express, server: Server) {
 
   app.use(vite.middlewares);
   app.use("*", async (req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      return res.status(404).json({ success: false, status: "not_registered", message: "API endpoint not found." });
+    }
     const url = req.originalUrl;
 
     try {
@@ -61,7 +64,10 @@ export function serveStatic(app: Express) {
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
+  app.use("*", (req, res) => {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      return res.status(404).json({ success: false, status: "not_registered", message: "API endpoint not found." });
+    }
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }
