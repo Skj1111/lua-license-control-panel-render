@@ -28,3 +28,5 @@
 - [x] Syntax-check the updated supplied Lua and verify its canonical validation endpoint configuration before delivery.
 - [x] Inspect the newly supplied BRPlayerCharacterBase.lua and update only its panel integration for the published independent domain, preserving all existing feature code.
 - [x] Syntax-check the updated BRPlayerCharacterBase.lua and verify its canonical endpoint configuration before delivery.
+- [x] Inspect and restore the missing V2 Custom Colour Menu in the supplied gameplay Lua without changing unrelated features or panel integration.
+- [x] Syntax-check the V2 Custom Colour Menu restoration and verify its menu bindings before delivery.
