@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "wouter";
 import { BarChart3, KeyRound, RefreshCw, ShieldAlert, Trash2, Users } from "lucide-react";
 import { trpc } from "@/lib/trpc";
@@ -26,6 +26,8 @@ export default function SuperOwnerOverview() {
     onSuccess: () => { setConfirm(null); void utils.superOwner.seasonCounts.invalidate(); void utils.superOwner.referralOverview.invalidate(); void utils.referrals.list.invalidate(); void utils.dashboard.audit.invalidate(); },
   });
 
+  if (identity.isLoading) return <Card className="hud-panel mx-auto mt-10 max-w-xl"><CardContent className="p-8 text-center"><p className="eyebrow">AUTHORIZATION BUS // SYNCHRONIZING</p><h1 className="neon-heading mt-2 text-3xl">VERIFYING SUPER OWNER ACCESS</h1><p className="mt-4 text-sm text-slate-400">Loading the server-enforced control scope before global records are exposed.</p></CardContent></Card>;
+  if (identity.error) return <Card className="hud-panel mx-auto mt-10 max-w-xl"><CardContent className="p-8 text-center"><ShieldAlert className="mx-auto h-8 w-8 text-pink-300" /><p className="eyebrow mt-4 text-pink-300">AUTHORIZATION BUS // UNAVAILABLE</p><h1 className="neon-heading mt-2 text-3xl">ACCESS CHECK FAILED</h1><p className="mt-4 text-sm text-slate-400">Global records remain disabled until the panel can verify your role. Refresh or sign in again.</p></CardContent></Card>;
   if (!isSuperOwner) return <Card className="hud-panel mx-auto mt-10 max-w-xl"><CardContent className="p-8 text-center"><ShieldAlert className="mx-auto h-8 w-8 text-pink-300" /><p className="eyebrow mt-4">RESTRICTED NODE</p><h1 className="neon-heading mt-2 text-3xl">SUPER OWNER ONLY</h1><p className="mt-4 text-sm text-slate-400">This overview is available only to the active configured Super Owner account.</p><Link href="/" className="cyber-outline mt-6 inline-flex h-10 items-center px-4 text-sm">RETURN TO DASHBOARD</Link></CardContent></Card>;
 
   const count = confirm === "keys" ? counts.data?.keys ?? 0 : counts.data?.referrals ?? 0;

@@ -30,6 +30,15 @@ describe("dashboard access-state UI", () => {
     }
   });
 
+  it("renders an authorization-loading state before a Super Owner direct route can be denied", () => {
+    for (const page of ["pages/SystemControl.tsx", "pages/AnnouncementControl.tsx", "pages/SuperOwnerOverview.tsx"]) {
+      const source = readClient(page);
+      expect(source).toContain("if (identity.isLoading)");
+      expect(source).toContain("VERIFYING SUPER OWNER ACCESS");
+      expect(source).toContain("ACCESS CHECK FAILED");
+    }
+  });
+
   it("provides visible client-side feedback before invalid license changes reach the server", () => {
     const home = readClient("pages/Home.tsx");
     const validators = readClient("lib/licenseFormValidation.ts");

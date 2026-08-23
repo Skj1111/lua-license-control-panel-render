@@ -16,9 +16,11 @@
 - [x] Run TypeScript and production build validation, inspect key interface screens, and document deployment, secrets, HTTPS domain, and Android runtime verification requirements.
 - [x] Add and verify a visible API diagnostics area in the authenticated dashboard.
 - [x] Add explicit protected-page permission-error and management-form validation-error states, then test them.
-- [ ] Inspect the authenticated overview, registry, bindings, referrals, user roles, and Super Owner management surfaces before final delivery.
+- [x] Inspect the authenticated overview, registry, bindings, referrals, user roles, and Super Owner management surfaces before final delivery.
 - [x] Add visible invalid-form guidance for license generation and management updates, then cover the behavior with regression tests.
 - [x] Add behavior-level regression tests proving invalid generation and management input blocks the corresponding submission path.
 - [x] Add jsdom component-interaction coverage proving invalid generation and management submissions show the alert and do not invoke their tRPC mutations.
-- [ ] Verify the authenticated Overview, Key Registry, Device Bindings, Referrals, User Roles, API Diagnostics, Super Owner, Maintenance, and Announcement screens in a browser session that holds the owner cookie.
+- [x] Show an explicit loading state on Super Owner direct routes while identity authorization is still resolving, then verify those routes after sign-in.
+- [x] Verify the authenticated Overview, Key Registry, Device Bindings, Referrals, User Roles, API Diagnostics, Super Owner, Maintenance, and Announcement screens in a browser session that holds the owner cookie.
+- [x] Add authenticated direct-route component rendering tests and record the readable owner-preview observations in the verification record.
 - [ ] Save a final project checkpoint and deliver the project version with an honest verification summary.

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
@@ -36,6 +36,8 @@ export default function SystemControl() {
     setEndAt(current.endAt ? toDateTimeLocal(current.endAt) : "");
   }, [maintenance.data]);
 
+  if (identity.isLoading) return <Card className="hud-panel mx-auto mt-10 max-w-xl"><CardContent className="p-8 text-center"><p className="eyebrow">AUTHORIZATION BUS // SYNCHRONIZING</p><h1 className="neon-heading mt-2 text-3xl">VERIFYING SUPER OWNER ACCESS</h1><p className="mt-4 text-sm text-slate-400">Loading the server-enforced control scope before maintenance settings are exposed.</p></CardContent></Card>;
+  if (identity.error) return <Card className="hud-panel mx-auto mt-10 max-w-xl"><CardContent className="p-8 text-center"><ShieldAlert className="mx-auto h-8 w-8 text-pink-300" /><p className="eyebrow mt-4 text-pink-300">AUTHORIZATION BUS // UNAVAILABLE</p><h1 className="neon-heading mt-2 text-3xl">ACCESS CHECK FAILED</h1><p className="mt-4 text-sm text-slate-400">Maintenance controls remain disabled until the panel can verify your role. Refresh or sign in again.</p></CardContent></Card>;
   if (!isSuperOwner) return <Card className="hud-panel mx-auto mt-10 max-w-xl"><CardContent className="p-8 text-center"><ShieldAlert className="mx-auto h-8 w-8 text-pink-300" /><p className="eyebrow mt-4">RESTRICTED NODE</p><h1 className="neon-heading mt-2 text-3xl">SUPER OWNER ONLY</h1><p className="mt-4 text-sm text-slate-400">System Control is available only to the active configured Super Owner account.</p><Link href="/" className="cyber-outline mt-6 inline-flex h-10 items-center px-4 text-sm">RETURN TO DASHBOARD</Link></CardContent></Card>;
 
   return <><header className="flex flex-col gap-5 border-b border-cyan-300/15 pb-7 sm:flex-row sm:items-end sm:justify-between"><div><p className="eyebrow text-amber-200">SUPER OWNER // OPERATIONAL HOLD</p><h1 className="neon-heading mt-2 text-4xl sm:text-5xl">SYSTEM CONTROL</h1><p className="mt-3 max-w-2xl text-sm text-slate-400">Configure the separate Server Maintenance state. It preserves valid license status while holding Main Lua during an active window.</p></div><Link href="/" className="cyber-outline inline-flex h-10 items-center justify-center px-4 text-sm">RETURN TO DASHBOARD</Link></header>

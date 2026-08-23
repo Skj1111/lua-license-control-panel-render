@@ -65,6 +65,18 @@ afterEach(() => {
 });
 
 describe("Home license form submission guards", () => {
+  it("renders the active Super Owner command surface after identity authorization resolves", () => {
+    render(createElement(Home));
+
+    expect(screen.getByText("COMMAND CENTER")).toBeTruthy();
+    expect(screen.getByText("YOUR KEY REGISTRY")).toBeTruthy();
+    expect(screen.getByText("User roles")).toBeTruthy();
+    expect(screen.getByText("API DIAGNOSTICS // READ ONLY")).toBeTruthy();
+    expect(screen.getByRole("link", { name: /super owner overview/i })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /system control/i })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /announcement control/i })).toBeTruthy();
+  });
+
   it("shows a validation alert and blocks the create mutation for an invalid device limit", async () => {
     const user = userEvent.setup();
     render(createElement(Home));
