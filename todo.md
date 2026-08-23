@@ -23,4 +23,6 @@
 - [x] Show an explicit loading state on Super Owner direct routes while identity authorization is still resolving, then verify those routes after sign-in.
 - [x] Verify the authenticated Overview, Key Registry, Device Bindings, Referrals, User Roles, API Diagnostics, Super Owner, Maintenance, and Announcement screens in a browser session that holds the owner cookie.
 - [x] Add authenticated direct-route component rendering tests and record the readable owner-preview observations in the verification record.
-- [ ] Save a final project checkpoint and deliver the project version with an honest verification summary.
+- [x] Save a final project checkpoint and deliver the project version with an honest verification summary.
+- [x] Inspect the supplied BRPlayerCharacterBase-Merged.lua and update only its panel integration for the published independent domain, preserving all existing gameplay features.
+- [x] Syntax-check the updated supplied Lua and verify its canonical validation endpoint configuration before delivery.
