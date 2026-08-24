@@ -89,7 +89,7 @@ describe("isolated Telegram extension", () => {
 
   it("provides Super Owner and referral-scoped Owner per-account edit controls without changing scoped permissions", () => {
     expect(telegramUiSource).toContain("EDIT LINK");
-    expect(telegramUiSource).toContain("userId: item.channel.userId");
+    expect(telegramUiSource).toContain("submitChannel(editingUrl, item.channel.userId, item.channel.enabled)");
     expect(telegramUiSource).toContain("editingUserId === item.channel.userId");
     expect(telegramUiSource).toContain("item.channel.channelUrl");
     expect(telegramSource).toContain("if (!(await canManageAccount(actor, input.userId)))");

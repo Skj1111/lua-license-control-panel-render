@@ -51,3 +51,5 @@
 - [x] Directly exercise active Super Owner maintenance, announcement, and Telegram save mutations without a forbidden error in regression coverage.
 - [x] Add retry/reopen handling for popup-open failure, invalid saved-key validation, and failed canonical validation; cover every retry path in the key-entry regression.
 - [x] Schedule a key-entry retry when canonical validation fails after a user submits a key through the popup, then assert this path in the regression.
+- [x] Audit latest panel client/server logs and the Lua key-entry validation flow for confirmed runtime errors, then fix only verified issues.
+- [x] Prevent malformed Telegram channel URLs from reaching the server and return a typed client-visible validation error rather than an internal-error response.

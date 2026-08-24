@@ -10,7 +10,19 @@ import { getDb } from "./db";
 import { users } from "../drizzle/schema";
 import { changeUsername, createReferral, deleteAllKeys, deleteAllReferrals, deleteKey, deleteReferral, deleteUser, durationToMinutes, generateKey, getActiveSystemAnnouncement, getAllKeysOverview, getApiSharedSecret, getBindings, getReferralOverview, getSeasonControlCounts, getStats, getSystemAnnouncement, getUsernameChangeAvailability, LICENSE_DURATION_UNITS, listAuditLogs, listKeys, listReferrals, listUsers, promoteConfiguredSuperOwner, redeemReferral, removeOwnerAccess, revokeReferral, setAdminAccess, setKeyStatus, setUsername, unbindDevice, updateLicense, updateSystemAnnouncement } from "./license";
 import { getServerMaintenance, updateServerMaintenance } from "./maintenance";
-import { createTelegramScope, getTelegramChannel, getTelegramSettings, getTelegramSetupState, listTelegramChannels, listTelegramScopeCandidates, mapTelegramLicense, saveTelegramChannel, updateTelegramSettings } from "./telegram";
+import { createTelegramScope, getTelegramChannel, getTelegramSettings, getTelegramSetupState, listTelegramChannels, listTelegramScopeCandidates, mapTelegramLicense, normalizeTelegramChannelUrl, saveTelegramChannel, updateTelegramSettings } from "./telegram";
+
+const telegramChannelInput = z.object({
+  userId: z.number().int().positive().optional(),
+  channelUrl: z.string().max(256).superRefine((value, ctx) => {
+    try {
+      normalizeTelegramChannelUrl(value);
+    } catch (error) {
+      ctx.addIssue({ code: "custom", message: error instanceof Error ? error.message : "Enter a valid Telegram HTTPS channel URL" });
+    }
+  }),
+  enabled: z.boolean().default(true),
+});
 
 export const appRouter = router({
   system: systemRouter,
@@ -78,7 +90,7 @@ export const appRouter = router({
     settings: protectedProcedure.query(() => getTelegramSettings()),
     myChannel: protectedProcedure.query(({ ctx }) => getTelegramChannel(ctx.user.id)),
     setupState: protectedProcedure.query(({ ctx }) => getTelegramSetupState(ctx.user.id)),
-    saveChannel: protectedProcedure.input(z.object({ userId: z.number().int().positive().optional(), channelUrl: z.string().max(256), enabled: z.boolean().default(true) })).mutation(({ input, ctx }) => saveTelegramChannel({ userId: input.userId ?? ctx.user.id, channelUrl: input.channelUrl, enabled: input.enabled }, { id: ctx.user.id, role: ctx.user.role })),
+    saveChannel: protectedProcedure.input(telegramChannelInput).mutation(({ input, ctx }) => saveTelegramChannel({ userId: input.userId ?? ctx.user.id, channelUrl: input.channelUrl, enabled: input.enabled }, { id: ctx.user.id, role: ctx.user.role })),
     channels: ownerProcedure.query(({ ctx }) => listTelegramChannels({ id: ctx.user.id, role: ctx.user.role })),
     updateSettings: superOwnerProcedure.input(z.object({ enabled: z.boolean() })).mutation(({ input, ctx }) => updateTelegramSettings(input, ctx.user.id)),
     scopeCandidates: superOwnerProcedure.query(() => listTelegramScopeCandidates()),
