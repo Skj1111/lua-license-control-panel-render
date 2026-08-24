@@ -46,5 +46,8 @@
 - [x] Add a repeatable source-level regression that checks the popup input, valid-response-only key.json write, and canonical request handoff.
 - [x] Fix the key-entry popup cancel/retry path so cancellation does not leave login permanently blocked, then cover it in the regression.
 - [ ] Perform owner-side Android popup smoke checks for cancel/retry, invalid-key handling, and key.json creation after a valid panel login.
+- [x] Diagnose and fix the Super Owner access required error on protected maintenance, announcement, and Telegram save actions for the signed-in project owner.
+- [x] Add regression coverage for configured-owner Super Owner role resolution and protected control saves.
+- [x] Directly exercise active Super Owner maintenance, announcement, and Telegram save mutations without a forbidden error in regression coverage.
 - [x] Add retry/reopen handling for popup-open failure, invalid saved-key validation, and failed canonical validation; cover every retry path in the key-entry regression.
 - [x] Schedule a key-entry retry when canonical validation fails after a user submits a key through the popup, then assert this path in the regression.

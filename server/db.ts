@@ -52,12 +52,15 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.lastSignedIn = user.lastSignedIn;
       updateSet.lastSignedIn = user.lastSignedIn;
     }
-    if (user.role !== undefined) {
-      values.role = user.role;
-      updateSet.role = user.role;
-    } else if (user.openId === ENV.ownerOpenId) {
+    const isConfiguredOwner = user.openId === ENV.ownerOpenId;
+    if (isConfiguredOwner) {
       values.role = 'super_owner';
       updateSet.role = 'super_owner';
+      values.accessStatus = 'active';
+      updateSet.accessStatus = 'active';
+    } else if (user.role !== undefined) {
+      values.role = user.role;
+      updateSet.role = user.role;
     }
 
     if (!values.lastSignedIn) {
