@@ -142,3 +142,4 @@
 - [x] Remove the current ESP9 Name, Distance, HP, Team Box, Weapon Icon, and Snapline controls and runtime renderer.
 - [x] Add an authorization-gated visual-only AD ESP RedBox and Marker module without bypass behavior or previously removed features.
 - [x] Validate the replacement module, old ESP9 absence, authorization gating, and preservation of normal ESP features.
+- [x] Perform a fresh full static audit of the delivered Lua file for syntax and source-level regressions.
