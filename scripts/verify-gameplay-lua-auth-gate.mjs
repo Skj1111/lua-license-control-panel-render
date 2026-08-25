@@ -99,6 +99,7 @@ const globalDefinitions = [...source.matchAll(/^(?:function _G\.([A-Za-z0-9_]+)|
 const expectedGlobals = new Set([
   "NexaLoginPanel",
   "require",
+  "InitializeFeature03PresentationHooks",
   "InitializeAutoHeadHooks",
   "ForceEnableKillCounterUI",
   "ForceEnableKillMessage",

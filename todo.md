@@ -78,3 +78,11 @@
 - [x] Run a deep full-file diagnostic scan of the latest Lua for syntax, duplicate declarations, callback conventions, lifecycle hazards, and fail-closed login/feature gating.
 - [x] Fix only confirmed Lua defects discovered by the deep scan without altering unrelated gameplay or panel behavior.
 - [x] Re-run full diagnostic checks and document verified findings before delivering the inspected Lua.
+- [x] Perform a second line-by-line full Lua review of login, startup timers, callbacks, menu guards, AD ESP lifecycle, configuration persistence, and risky API-call conventions.
+- [x] Fix only confirmed defects found in the second-pass review and re-run the complete Lua regression suite.
+- [x] Complete an exhaustive second-pass audit of all major Lua source sections and record the reviewed ranges with lifecycle/API safety findings.
+- [x] Add a repeatable second-pass scan/report that proves every major Lua section was reviewed.
+- [x] Create an explicit per-section findings log for all 18 major Lua sections, including relevant lifecycle/API safety observations and no-issue conclusions.
+- [x] Verify the findings log covers every range in the generated full-source second-pass audit.
+- [x] Map and guard the confirmed Feature 03 load-time UI and vehicle hooks so they cannot modify gameplay presentation before canonical authorization.
+- [x] Re-run strict authorization-gate validation after the Feature 03 pre-login hook repair.
