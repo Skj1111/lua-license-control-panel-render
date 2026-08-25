@@ -65,3 +65,13 @@
 - [ ] Confirm on the Android host that key entry, canonical validation, and key.json save complete without the reported login problem.
 - [x] Compare the newly supplied Snap Line implementation against the current AD ESP tracer path and merge only compatible stability logic.
 - [x] Validate the resulting AD ESP tracer update with Lua syntax and source-level stability checks before device testing.
+- [x] Inventory every active menu control and runtime feature in the latest Lua, excluding unreachable or legacy-only code paths.
+- [x] Write and source-verify a complete Hinglish reference that explains the latest Lua features and controls.
+- [x] Audit and document all remaining active non-menu runtime behaviors in the latest Lua, including presentation paths, persistence/retry flows, startup logic, and runtime helpers, while explicitly excluding legacy-only paths.
+- [x] Add source-level coverage evidence that the feature reference includes active runtime behavior as well as the five visible menu stacks.
+- [x] Audit the entire latest Lua file and produce a definitive inventory of active non-menu runtime behaviors with explicit legacy-only or unreachable exclusions.
+- [x] Add a generated inventory or repeatable source-level checker proving complete runtime-feature coverage across the latest Lua source.
+- [x] Revise the feature reference into clear Hinglish/Urdu after the exhaustive audit is complete.
+- [x] Classify every Lua declaration and path as active, external-callback, compatibility-only, or legacy/unreachable with source evidence.
+- [x] Expand the generated inventory and checker to map every audited active runtime behavior and exclusion rather than relying on counts and selected markers.
+- [x] Revise and re-verify the Hinglish feature reference against the declaration-by-declaration classification.
