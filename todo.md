@@ -127,3 +127,5 @@
 - [x] Report source-verified integration findings and obtain confirmation before modifying the current Lua.
 - [x] Diagnose why the authorized Feature 03 @NEXA watermark does not visibly render on the user's Android host.
 - [x] Apply and validate only a confirmed source-level watermark rendering fix while preserving unrelated presentation behavior.
+- [x] Remove the Feature 03 @NEXA watermark renderer and all watermark-only supporting code from the latest Lua.
+- [x] Verify watermark paths are absent while preserving unrelated Feature 03 behavior and authorization hooks.
