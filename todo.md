@@ -148,3 +148,4 @@
 - [x] Inspect the user-supplied backup Lua for confirmed syntax, merge, and safe source-level issues without enabling bypass behavior.
 - [x] Diagnose and, if source-confirmed, correct B Point Snapline drift during swipe or gyro camera movement.
 - [x] Assess and, if source-supported, refine Snapline B Point attachment to the target during camera motion.
+- [x] Apply and validate the focused visual-only Snapline B Point target-attachment refinement in the user-supplied backup Lua only, leaving all other code untouched.
