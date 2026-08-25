@@ -75,3 +75,6 @@
 - [x] Classify every Lua declaration and path as active, external-callback, compatibility-only, or legacy/unreachable with source evidence.
 - [x] Expand the generated inventory and checker to map every audited active runtime behavior and exclusion rather than relying on counts and selected markers.
 - [x] Revise and re-verify the Hinglish feature reference against the declaration-by-declaration classification.
+- [x] Run a deep full-file diagnostic scan of the latest Lua for syntax, duplicate declarations, callback conventions, lifecycle hazards, and fail-closed login/feature gating.
+- [x] Fix only confirmed Lua defects discovered by the deep scan without altering unrelated gameplay or panel behavior.
+- [x] Re-run full diagnostic checks and document verified findings before delivering the inspected Lua.
