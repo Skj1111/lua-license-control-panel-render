@@ -120,3 +120,6 @@
 - [x] Verify no outline menu, configuration, or active runtime marker remains while other ESP features stay intact.
 - [x] Verify the current ESP Type 2 distance-text color definition and active draw call without changing behavior.
 - [x] Change only the ESP Type 2 distance-text color to visible opaque blue and validate the updated Lua.
+- [x] Explain the active Section 7 ESP Line Subsystem features and behavior from the latest Lua source.
+- [x] Diagnose confirmed source-level causes of lag in the Section 7 AD ESP tracer-line subsystem.
+- [x] Apply and validate only targeted tracer-line performance improvements while preserving behavior.
