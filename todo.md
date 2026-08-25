@@ -56,10 +56,12 @@
 - [ ] Diagnose and fix the reported Lua client error in the latest gameplay login/key-entry integration without changing unrelated gameplay features.
 - [ ] Run Lua syntax and client-compatibility regression checks after the client-error fix.
 - [ ] Capture the Android Lua client-error message or screenshot and validate the latest key-entry, HTTP, and UI manager calls on the target runtime before closing the issue.
-- [ ] Compare the supplied BRPlayerCharacterBase(1).lua AD ESP line implementation with the latest panel-integrated Lua and merge only its verified line-stability fix.
-- [ ] Syntax-check and verify AD ESP line rendering integration before delivery.
+- [x] Compare the supplied BRPlayerCharacterBase(1).lua AD ESP line implementation with the latest panel-integrated Lua and merge only its verified line-stability fix.
+- [x] Syntax-check and verify AD ESP line rendering integration before delivery.
 - [ ] Perform owner-side match verification that AD ESP tracer lines render correctly and remain stable after the threshold/caching merge.
 - [ ] Diagnose and fix the reported Lua login problem in the latest panel-integrated Lua without changing unrelated gameplay features.
 - [x] Validate the repaired login flow against the canonical panel endpoint and Lua syntax before delivery.
 - [x] Restore the native response delegate self argument so canonical validation callbacks reach the Lua login handler.
 - [ ] Confirm on the Android host that key entry, canonical validation, and key.json save complete without the reported login problem.
+- [x] Compare the newly supplied Snap Line implementation against the current AD ESP tracer path and merge only compatible stability logic.
+- [x] Validate the resulting AD ESP tracer update with Lua syntax and source-level stability checks before device testing.

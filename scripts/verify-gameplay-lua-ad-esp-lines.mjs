@@ -10,9 +10,11 @@ function requireMatch(label, pattern) {
 
 requireMatch("tracer-line threshold", /local ESPLineGeometryThreshold = 2\.0/);
 requireMatch("cached player/bot line color", /local colorKey = isBot and "bot" or "player"/);
+requireMatch("cached line visibility", /isVisible = true/);
 requireMatch("cached line endpoints", /lastFromX = nil,[\s\S]{0,180}?lastToY = nil/);
 requireMatch("sub-threshold geometry guard", /local geometryChanged = entry\.lastFromX == nil[\s\S]{0,420}?ESPLineGeometryThreshold/);
 requireMatch("redraw only when geometry changes", /if geometryChanged then[\s\S]{0,700}?entry\.widget:SetRenderAngle\(angle\)/);
+requireMatch("visibility redraw only on state change", /if entry\.isVisible ~= true then[\s\S]{0,240}?SetWidgetVisibility\(UEnums\.ESlateVisibility\.SelfHitTestInvisible\)[\s\S]{0,160}?entry\.isVisible = true/);
 
 console.log("AD_ESP_LINE_CHECK=PASS");
 console.log("LINE_GEOMETRY_THRESHOLD=2.0");
