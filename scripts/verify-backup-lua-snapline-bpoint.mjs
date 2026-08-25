@@ -8,7 +8,10 @@ const required = [
   "local ADESP_TRACER_UPDATE_INTERVAL = 0.05",
   "local ADESP_MAX_TRACER_TARGETS = 12",
   "local ESPLineGeometryThreshold = 0.25",
+  "local ESPLineBotColor = FLinearColor(1.0, 0.0, 0.0, 0.95)",
+  "local ESPLinePlayerColor = FLinearColor(0.0, 1.0, 0.0, 0.95)",
   "local function GetESPLineEndpoint(pc, myLoc, targetLoc, headLoc, projected, projectionOK, viewportSize)",
+  "return ScreenToStableCanvas(pc, projected, canvas)",
   "local function UpdateESPLine(id, fromPos, toPos, isBot)",
   "headLoc = GetHeadWorldPosition(enemy)",
   "UpdateESPLineSet(espLineTargets)",
@@ -28,4 +31,4 @@ if (source.includes("local ADESP_TRACER_UPDATE_INTERVAL = 0.10") || source.inclu
 console.log("BACKUP_SNAPLINE_B_POINT_CHECK=PASS");
 console.log("B_POINT_REFRESH=20HZ");
 console.log("ENDPOINT_THRESHOLD=0.25PX");
-
+console.log("DUPLICATE_WORLD_PROJECTION_AVOIDED=PASS");
