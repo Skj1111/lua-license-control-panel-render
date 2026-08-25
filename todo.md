@@ -53,3 +53,13 @@
 - [x] Schedule a key-entry retry when canonical validation fails after a user submits a key through the popup, then assert this path in the regression.
 - [x] Audit latest panel client/server logs and the Lua key-entry validation flow for confirmed runtime errors, then fix only verified issues.
 - [x] Prevent malformed Telegram channel URLs from reaching the server and return a typed client-visible validation error rather than an internal-error response.
+- [ ] Diagnose and fix the reported Lua client error in the latest gameplay login/key-entry integration without changing unrelated gameplay features.
+- [ ] Run Lua syntax and client-compatibility regression checks after the client-error fix.
+- [ ] Capture the Android Lua client-error message or screenshot and validate the latest key-entry, HTTP, and UI manager calls on the target runtime before closing the issue.
+- [ ] Compare the supplied BRPlayerCharacterBase(1).lua AD ESP line implementation with the latest panel-integrated Lua and merge only its verified line-stability fix.
+- [ ] Syntax-check and verify AD ESP line rendering integration before delivery.
+- [ ] Perform owner-side match verification that AD ESP tracer lines render correctly and remain stable after the threshold/caching merge.
+- [ ] Diagnose and fix the reported Lua login problem in the latest panel-integrated Lua without changing unrelated gameplay features.
+- [x] Validate the repaired login flow against the canonical panel endpoint and Lua syntax before delivery.
+- [x] Restore the native response delegate self argument so canonical validation callbacks reach the Lua login handler.
+- [ ] Confirm on the Android host that key entry, canonical validation, and key.json save complete without the reported login problem.

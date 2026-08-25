@@ -17,6 +17,11 @@ function requireMatch(label, pattern) {
 requireMatch("native input blueprint", /KEY_ENTRY_BLUEPRINT\s*=\s*"\/Game\/UMG\/UI_BP\/Home\/Common\/Popup\/Small\/Home_Input_Popups_UIBP/);
 requireMatch("popup title", /SetData\(self, "ENTER YOUR KEY"\)/);
 requireMatch("popup controls", /Button_OK[\s\S]{0,450}?Button_Cancel/);
+requireMatch("userdata-safe HUD access", /type\(hud\) ~= "table" and type\(hud\) ~= "userdata"/);
+requireMatch("userdata-safe HTTP wrapper access", /type\(http_wrapper\) ~= "table" and type\(http_wrapper\) ~= "userdata"/);
+requireMatch("userdata-safe UI manager access", /type\(manager\) ~= "table" and type\(manager\) ~= "userdata"/);
+requireMatch("response event self-call", /PCall\(add_response, response_event, function\(reqIndex/);
+requireMatch("popup manager dot-call", /return show_ui\(KEY_ENTRY_CONFIG, KEY_ENTRY_MODULE, KEY_ENTRY_BLUEPRINT/);
 requireMatch("key character validation", /key:match\("\^\[A-Za-z0-9%-\]\+\$"\)/);
 requireMatch("key json encoder", /save_validated_panel_key\(json, key\)[\s\S]{0,650}?json\.encode\(\{ key = key \}\)/);
 requireMatch("key json target", /write_key_file\(KEY_FILE_CANDIDATES\[1\], encoded\)/);
