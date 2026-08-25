@@ -92,3 +92,7 @@
 - [x] Verify the reduced Lua has no requested removed menu labels or active runtime branches while preserving all unrelated menu, login, and authorization behavior.
 - [x] Add and run a branch-level regression proving every requested removed runtime path is forced off before it can apply an effect.
 - [x] Run a final post-removal diagnostic over the latest Lua and repair only a confirmed regression.
+- [x] Verify and summarize the current Lua License Control Panel features for the user.
+- [ ] Verify the panel announcement save control, active endpoint response, and latest Lua announcement-delivery integration end to end.
+- [x] Add repeatable tests for an active announcement payload and the latest Lua post-login presentation path without changing live announcement content.
+- [ ] Confirm the current live announcement endpoint state and obtain owner-side Android confirmation after an announcement is enabled.

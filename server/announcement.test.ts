@@ -34,7 +34,16 @@ describe("system announcement rules", () => {
 
   it("returns presentation metadata and no payload when inactive", () => {
     const active = toAnnouncementPayload(base, new Date("2026-08-15T12:00:00.000Z"));
-    expect(active).toMatchObject({ active: true, version: 3, displayMode: "once_per_day", textSize: "festival_large" });
+    expect(active).toEqual({
+      active: true,
+      id: 1,
+      version: 3,
+      title: "🇮🇳 Independence Day",
+      message: "Happy Independence Day to all users! 🎉",
+      displayMode: "once_per_day",
+      textSize: "festival_large",
+      endAt: "2026-08-16T00:00:00.000Z",
+    });
     expect(toAnnouncementPayload({ ...base, enabled: false }, new Date("2026-08-15T12:00:00.000Z"))).toEqual({ active: false });
   });
 });
