@@ -104,3 +104,6 @@
 - [x] Remove or permanently fail-close the remaining user-facing kill-message skin control and binding.
 - [x] Remove the Feature 03 custom ping-text override while preserving watermark and unrelated presentation hooks.
 - [x] Verify the normal ping path is no longer overridden and the latest Lua remains valid.
+- [x] Audit the latest Lua ESP Antenna menu control, configuration, and active runtime path without altering unrelated features.
+- [x] Report verified ESP Antenna findings and identify any confirmed source-level issue separately from Android runtime testing.
+- [x] Record durable ESP Antenna source-audit findings, including the owner-side Android runtime testing limitation.
