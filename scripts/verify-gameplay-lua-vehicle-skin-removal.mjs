@@ -20,7 +20,7 @@ if (remaining.length > 0) {
   process.exit(1);
 }
 
-if (!source.includes("Vehicle skin customization has been removed by request")) {
+if (!source.includes("Vehicle, weapon, and outfit skin substitutions are removed.")) {
   console.error("VEHICLE_SKIN_REMOVAL_CHECK=FAIL");
   console.error("- missing explicit vehicle-skin removal policy");
   process.exit(1);
