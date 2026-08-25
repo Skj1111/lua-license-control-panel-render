@@ -102,3 +102,5 @@
 - [x] Remove weapon and outfit skin substitution from kill-message handling while preserving normal kill-message and kill-counter behavior.
 - [x] Verify no removed kill-message skin substitution markers or controls remain in the latest Lua.
 - [x] Remove or permanently fail-close the remaining user-facing kill-message skin control and binding.
+- [x] Remove the Feature 03 custom ping-text override while preserving watermark and unrelated presentation hooks.
+- [x] Verify the normal ping path is no longer overridden and the latest Lua remains valid.

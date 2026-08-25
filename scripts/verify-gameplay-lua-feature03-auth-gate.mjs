@@ -21,10 +21,9 @@ if (!/if _G\.Feature03PresentationHooksInitialized then return true end/.test(fe
 for (const label of [
   "UpdateArtQualityUI wrapper guard",
   "TickRefreshBatteryInfo wrapper guard",
-  "SetPingText wrapper guard",
   "kill-message wrapper guard",
 ]) {
-  if ((feature03.match(/HasPanelAuthorization\(\)/g) ?? []).length < 5) {
+  if ((feature03.match(/HasPanelAuthorization\(\)/g) ?? []).length < 4) {
     failures.push(`${label} is missing authorization-gate coverage`);
     break;
   }
