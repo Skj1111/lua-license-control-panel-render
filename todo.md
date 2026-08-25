@@ -136,3 +136,5 @@
 - [x] Build an authorization-gated ESP9 visual-only AD ESP module with Name, Distance, HP, Team Box, Weapon Icon, and optimized Snapline.
 - [x] Add AD ESP menu controls, lifecycle cleanup, and safe persistence without reintroducing removed or bypass behavior.
 - [x] Validate ESP9 AD ESP syntax, authorization gating, cleanup, and preservation of normal ESP features.
+- [x] Diagnose why the ESP9 AD ESP Snapline does not visibly render on the user's Android host.
+- [x] Apply and validate only a focused ESP9 Snapline rendering fix while preserving all other ESP9 controls.
