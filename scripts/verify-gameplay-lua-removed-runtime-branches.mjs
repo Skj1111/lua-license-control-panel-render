@@ -11,12 +11,13 @@ const forbidden = [
   ["horizontal recoil", "CustomHRecoil"], ["vertical recoil", "CustomVRecoil"], ["perfect accuracy", "Accuracy"],
   ["aimbot head", "AutoHead"], ["vehicle wallhack", "WallVehicle"], ["tree removal", "RemoveTrees"],
   ["fog removal", "RemoveFog"], ["fast flying car", "FastCar"],
+  ["ESP outline", "EspOutline"], ["outline thickness", "OutlineThickness"],
 ];
 for (const [label, marker] of forbidden) {
   if (new RegExp(`\\b${marker}\\b`).test(source)) failures.push(`${label}: retained marker ${marker}`);
 }
 
-const preservedMarkers = ["EspAntenna", "EspLoai8", "EspOutline", "EspLoai7", "Esp7_VuKhi", "RemoveGrass", "BlackSky", "CustomAimbot"];
+const preservedMarkers = ["EspAntenna", "EspLoai8", "EspLoai7", "Esp7_VuKhi", "RemoveGrass", "BlackSky", "CustomAimbot"];
 for (const marker of preservedMarkers) {
   if (!source.includes(marker)) failures.push(`unrelated active feature marker missing: ${marker}`);
 }

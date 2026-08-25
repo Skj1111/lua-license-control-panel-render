@@ -9,11 +9,12 @@ const removedMenuKeys = [
   "ModMenu_ESP1", "ModMenu_ESP3_Ex", "ModMenu_ESP3_Name", "ModMenu_ESP3_HP", "ModMenu_ESP4", "ModMenu_ESP6",
   "ModMenu_ESP7_TuThe", "ModMenu_EspItem_Link", "ModMenu_HRecoil_Ex", "ModMenu_HRecoil_Val", "ModMenu_VRecoil_Ex",
   "ModMenu_VRecoil_Val", "ModMenu_Accuracy", "ModMenu_AutoHead", "ModMenu_WallVehicle", "ModMenu_RemoveFog",
-  "ModMenu_RemoveTrees", "ModMenu_FastCar",
+  "ModMenu_RemoveTrees", "ModMenu_FastCar", "ModMenu_ESPOutline_Ex", "ModMenu_ESPOutline_Thickness",
 ];
 const removedConfigKeys = [
   "EspVip", "EspVipPro", "Esp3ShowName", "Esp3ShowHP", "EspRadar", "EspLoai6", "Esp7_TuThe", "EspItem_Master",
   "CustomHRecoil", "CustomVRecoil", "Accuracy", "AutoHead", "WallVehicle", "RemoveFog", "RemoveTrees", "FastCar",
+  "EspOutline", "OutlineThickness",
 ];
 
 for (const key of removedMenuKeys) {

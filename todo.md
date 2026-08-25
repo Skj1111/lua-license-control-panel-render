@@ -116,3 +116,5 @@
 - [x] Provide the user with a verified current feature list grouped by menu area and runtime behavior.
 - [x] Diagnose why the active ESP Antenna toggle does not visibly render on the user's Android host.
 - [x] Apply and validate only a confirmed source-level ESP Antenna rendering fix, preserving unrelated features.
+- [x] Remove the ESP Enemy Outline feature and its Outline Thickness control from the latest Lua.
+- [x] Verify no outline menu, configuration, or active runtime marker remains while other ESP features stay intact.
