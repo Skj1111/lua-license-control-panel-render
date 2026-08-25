@@ -123,3 +123,7 @@
 - [x] Explain the active Section 7 ESP Line Subsystem features and behavior from the latest Lua source.
 - [x] Diagnose confirmed source-level causes of lag in the Section 7 AD ESP tracer-line subsystem.
 - [x] Apply and validate only targeted tracer-line performance improvements while preserving behavior.
+- [x] Compare the supplied full ESP and Snapline source files with the current Section 7 tracer system for compatibility and lag implications.
+- [x] Report source-verified integration findings and obtain confirmation before modifying the current Lua.
+- [x] Diagnose why the authorized Feature 03 @NEXA watermark does not visibly render on the user's Android host.
+- [x] Apply and validate only a confirmed source-level watermark rendering fix while preserving unrelated presentation behavior.
