@@ -147,3 +147,4 @@
 - [ ] Retrieve and verify the saved Lua artifact from immediately after the ESP Antenna color fix for user delivery.
 - [x] Inspect the user-supplied backup Lua for confirmed syntax, merge, and safe source-level issues without enabling bypass behavior.
 - [x] Diagnose and, if source-confirmed, correct B Point Snapline drift during swipe or gyro camera movement.
+- [x] Assess and, if source-supported, refine Snapline B Point attachment to the target during camera motion.

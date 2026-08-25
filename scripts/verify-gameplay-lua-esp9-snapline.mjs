@@ -11,7 +11,7 @@ const requirements = [
   "entry.line:SetRenderTransformPivot(FVector2D(0,.5))",
   "entry.line:SetRenderTransformAngle(math.deg(math.atan2(dy,dx)))",
   "Esp9_LineThick", "Esp9_LineVisColor", "Esp9_LineHidColor",
-  "refreshInterval=0.10", "lastLineUpdate=0", "lineRefreshInterval=1/30", "maxTargets=12",
+  "refreshInterval=0.10", "lastLineUpdate=0", "lineRefreshInterval=1/60", "maxTargets=12",
   "local function ESPVIPUpdateLine(pc, canvas, entry, screen)",
   "local function ESPVIPRefreshLines()",
   "entry.enemy = enemy",
