@@ -11,7 +11,12 @@ const requirements = [
   "entry.line:SetRenderTransformPivot(FVector2D(0,.5))",
   "entry.line:SetRenderTransformAngle(math.deg(math.atan2(dy,dx)))",
   "Esp9_LineThick", "Esp9_LineVisColor", "Esp9_LineHidColor",
-  "refreshInterval=0.10", "maxTargets=12",
+  "refreshInterval=0.10", "lastLineUpdate=0", "lineRefreshInterval=1/30", "maxTargets=12",
+  "local function ESPVIPUpdateLine(pc, canvas, entry, screen)",
+  "local function ESPVIPRefreshLines()",
+  "entry.enemy = enemy",
+  "now-ESPVIPState.lastLineUpdate < ESPVIPState.lineRefreshInterval",
+  "ESPVIPTick()\n    ESPVIPRefreshLines()",
 ];
 const missing = requirements.filter((item) => !source.includes(item));
 if (missing.length > 0) {
@@ -23,4 +28,4 @@ console.log("ESP_VIP_SNAPLINE_CHECK=PASS");
 console.log("VIEWPORT_SCALE_CONVERSION=PASS");
 console.log("TOP_CENTER_ORIGIN=PASS");
 console.log("LINE_STYLE_CONTROLS=PASS");
-
+console.log("LIGHTWEIGHT_B_POINT_REFRESH=PASS");

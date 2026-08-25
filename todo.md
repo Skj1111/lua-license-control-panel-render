@@ -143,3 +143,7 @@
 - [x] Add an authorization-gated visual-only AD ESP RedBox and Marker module without bypass behavior or previously removed features.
 - [x] Validate the replacement module, old ESP9 absence, authorization gating, and preservation of normal ESP features.
 - [x] Perform a fresh full static audit of the delivered Lua file for syntax and source-level regressions.
+- [ ] Retrieve and verify the saved Lua artifact from immediately before AD ESP removal for user delivery.
+- [ ] Retrieve and verify the saved Lua artifact from immediately after the ESP Antenna color fix for user delivery.
+- [x] Inspect the user-supplied backup Lua for confirmed syntax, merge, and safe source-level issues without enabling bypass behavior.
+- [x] Diagnose and, if source-confirmed, correct B Point Snapline drift during swipe or gyro camera movement.
