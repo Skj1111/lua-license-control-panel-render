@@ -107,3 +107,5 @@
 - [x] Audit the latest Lua ESP Antenna menu control, configuration, and active runtime path without altering unrelated features.
 - [x] Report verified ESP Antenna findings and identify any confirmed source-level issue separately from Android runtime testing.
 - [x] Record durable ESP Antenna source-audit findings, including the owner-side Android runtime testing limitation.
+- [x] Audit whether the gameplay features previously removed from menus remain as disabled legacy runtime code in the latest Lua.
+- [x] Report the verified distinction between deleted menu controls, fail-closed configuration, and any retained legacy branches.
