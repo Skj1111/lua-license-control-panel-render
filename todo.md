@@ -96,3 +96,5 @@
 - [ ] Verify the panel announcement save control, active endpoint response, and latest Lua announcement-delivery integration end to end.
 - [x] Add repeatable tests for an active announcement payload and the latest Lua post-login presentation path without changing live announcement content.
 - [ ] Confirm the current live announcement endpoint state and obtain owner-side Android confirmation after an announcement is enabled.
+- [x] Remove the vehicle-skin and vehicle-presentation customization feature while preserving unrelated vehicle handling.
+- [x] Verify that no vehicle-skin menu, configuration, or active runtime hook remains after removal.

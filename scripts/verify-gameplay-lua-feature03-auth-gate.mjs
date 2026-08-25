@@ -23,9 +23,8 @@ for (const label of [
   "TickRefreshBatteryInfo wrapper guard",
   "SetPingText wrapper guard",
   "kill-message wrapper guard",
-  "vehicle effect wrapper guard",
 ]) {
-  if ((feature03.match(/HasPanelAuthorization\(\)/g) ?? []).length < 7) {
+  if ((feature03.match(/HasPanelAuthorization\(\)/g) ?? []).length < 5) {
     failures.push(`${label} is missing authorization-gate coverage`);
     break;
   }
