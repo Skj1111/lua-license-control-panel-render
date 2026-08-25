@@ -31,8 +31,8 @@ if (!/if not HasPanelAuthorization\(\) then[\s\S]{0,180}?return false/.test(menu
 }
 
 const menuStack = blockFrom("local function GuardMenuStack(stack)", 2400);
-if ((menuStack.match(/GuardMenuStack\(Stack/g) ?? []).length !== 4) {
-  failures.push("all four remaining menu stacks must be guarded");
+if ((menuStack.match(/GuardMenuStack\(Stack/g) ?? []).length !== 5) {
+  failures.push("all five active menu stacks must be guarded");
 }
 if (!/if not HasPanelAuthorization\(\) then return false end/.test(menuStack)) {
   failures.push("menu GetFunc/SetFunc authorization guard");
@@ -131,7 +131,7 @@ if (failures.length > 0) {
 }
 
 console.log("AUTH_GATE_CHECK=PASS");
-console.log("GUARDED_MENU_STACKS=4");
+console.log("GUARDED_MENU_STACKS=5");
 console.log("GUARDED_INDEPENDENT_FEATURE_PATHS=10");
 console.log("GUARDED_PERSISTED_CONFIG_PATHS=3");
 console.log(`REVIEWED_GLOBAL_HELPERS=${globalDefinitions.length}`);

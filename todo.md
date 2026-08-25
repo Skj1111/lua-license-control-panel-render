@@ -131,3 +131,8 @@
 - [x] Verify watermark paths are absent while preserving unrelated Feature 03 behavior and authorization hooks.
 - [x] Physically remove all AD ESP menu controls, configuration, tags, tracers, counter, weapon display, and support code.
 - [x] Verify AD ESP markers are absent while preserving normal ESP Type 2/5/7/8 and unrelated active features.
+- [x] Assess the supplied ESP9 source for a safe authorization-gated AD ESP replacement that excludes removed features and bypass behavior.
+- [x] Present the compatible visual-only AD ESP replacement scope and obtain user confirmation before integrating it.
+- [x] Build an authorization-gated ESP9 visual-only AD ESP module with Name, Distance, HP, Team Box, Weapon Icon, and optimized Snapline.
+- [x] Add AD ESP menu controls, lifecycle cleanup, and safe persistence without reintroducing removed or bypass behavior.
+- [x] Validate ESP9 AD ESP syntax, authorization gating, cleanup, and preservation of normal ESP features.
