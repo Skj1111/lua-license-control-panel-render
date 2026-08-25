@@ -91,3 +91,4 @@
 - [x] Remove Support & Graphics controls and effects for vehicle wallhack, fog removal, tree removal, and fast flying car.
 - [x] Verify the reduced Lua has no requested removed menu labels or active runtime branches while preserving all unrelated menu, login, and authorization behavior.
 - [x] Add and run a branch-level regression proving every requested removed runtime path is forced off before it can apply an effect.
+- [x] Run a final post-removal diagnostic over the latest Lua and repair only a confirmed regression.
