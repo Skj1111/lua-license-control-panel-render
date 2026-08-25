@@ -86,3 +86,8 @@
 - [x] Verify the findings log covers every range in the generated full-source second-pass audit.
 - [x] Map and guard the confirmed Feature 03 load-time UI and vehicle hooks so they cannot modify gameplay presentation before canonical authorization.
 - [x] Re-run strict authorization-gate validation after the Feature 03 pre-login hook repair.
+- [x] Remove ESP Type 1, 3, 4, 6, 7 Show Enemy State only, and ESP Item controls plus their associated runtime effects.
+- [x] Remove Aimbot controls and effects for horizontal recoil, vertical recoil, perfect accuracy, and head aimbot.
+- [x] Remove Support & Graphics controls and effects for vehicle wallhack, fog removal, tree removal, and fast flying car.
+- [x] Verify the reduced Lua has no requested removed menu labels or active runtime branches while preserving all unrelated menu, login, and authorization behavior.
+- [x] Add and run a branch-level regression proving every requested removed runtime path is forced off before it can apply an effect.
