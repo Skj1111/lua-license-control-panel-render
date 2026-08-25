@@ -112,3 +112,7 @@
 - [x] Physically delete only the legacy runtime code for gameplay features previously removed at the user's request.
 - [x] Remove obsolete removed-feature policy code and update regressions to assert the legacy branches are absent.
 - [x] Validate the cleaned Lua and remaining active feature paths before delivery.
+- [x] Inventory the active features in the latest physically cleaned Lua, excluding the removed feature set.
+- [x] Provide the user with a verified current feature list grouped by menu area and runtime behavior.
+- [x] Diagnose why the active ESP Antenna toggle does not visibly render on the user's Android host.
+- [x] Apply and validate only a confirmed source-level ESP Antenna rendering fix, preserving unrelated features.
