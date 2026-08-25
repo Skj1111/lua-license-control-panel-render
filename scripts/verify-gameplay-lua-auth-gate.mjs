@@ -77,12 +77,10 @@ if (/\b_G\.LoadModSettings\(\)/.test(startupConfig) || !/Saved toggles are delib
 }
 
 const globalFeatureEntrypoints = [
-  ["auto-head hook installer", "function _G.InitializeAutoHeadHooks()"],
   ["kill counter hook installer", "_G.ForceEnableKillCounterUI = function()"],
   ["kill message hook installer", "_G.ForceEnableKillMessage = function()"],
   ["enemy target helper", "_G.GetEnemyTargetsFromActors = function(radius)"],
   ["aim helper", "_G.AimTouch = function()"],
-  ["vehicle and item ESP helper", "_G.RunOptimizedItemAndVehicleESP = function(pc)"],
   ["AD ESP initializer", "function _G.InitializeADESPSystem()"],
   ["mortar aim helper", "function _G.MortarAimTick()"],
 ];
@@ -100,7 +98,6 @@ const expectedGlobals = new Set([
   "NexaLoginPanel",
   "require",
   "InitializeFeature03PresentationHooks",
-  "InitializeAutoHeadHooks",
   "ForceEnableKillCounterUI",
   "ForceEnableKillMessage",
   "SaveModSettings",
@@ -110,7 +107,6 @@ const expectedGlobals = new Set([
   "ScheduleNexaKeyEntryRetry",
   "GetEnemyTargetsFromActors",
   "AimTouch",
-  "RunOptimizedItemAndVehicleESP",
   "InitializeADESPSystem",
   "MortarAimTick",
 ]);

@@ -109,3 +109,6 @@
 - [x] Record durable ESP Antenna source-audit findings, including the owner-side Android runtime testing limitation.
 - [x] Audit whether the gameplay features previously removed from menus remain as disabled legacy runtime code in the latest Lua.
 - [x] Report the verified distinction between deleted menu controls, fail-closed configuration, and any retained legacy branches.
+- [x] Physically delete only the legacy runtime code for gameplay features previously removed at the user's request.
+- [x] Remove obsolete removed-feature policy code and update regressions to assert the legacy branches are absent.
+- [x] Validate the cleaned Lua and remaining active feature paths before delivery.
