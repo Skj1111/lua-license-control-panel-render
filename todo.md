@@ -138,3 +138,7 @@
 - [x] Validate ESP9 AD ESP syntax, authorization gating, cleanup, and preservation of normal ESP features.
 - [x] Diagnose why the ESP9 AD ESP Snapline does not visibly render on the user's Android host.
 - [x] Apply and validate only a focused ESP9 Snapline rendering fix while preserving all other ESP9 controls.
+- [x] Inspect the supplied ALEXALORD RedBox and Marker source and map its visual-only feature set.
+- [x] Remove the current ESP9 Name, Distance, HP, Team Box, Weapon Icon, and Snapline controls and runtime renderer.
+- [x] Add an authorization-gated visual-only AD ESP RedBox and Marker module without bypass behavior or previously removed features.
+- [x] Validate the replacement module, old ESP9 absence, authorization gating, and preservation of normal ESP features.
