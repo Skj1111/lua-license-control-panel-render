@@ -159,3 +159,4 @@
 - [x] Change the backup Lua AD ESP weapon icon size from 30×20 to 50×30 and validate the focused visual update.
 - [x] Diagnose and, if source-confirmed, fix the backup AD ESP Counter distance display so it refreshes while moving.
 - [x] Perform a fresh static audit of all active backup Lua feature paths and report confirmed findings.
+- [x] Statically examine the uploaded dumpbecausenowhynot.lua file and report its observable format and purpose.
