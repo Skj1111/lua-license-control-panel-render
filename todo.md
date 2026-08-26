@@ -155,3 +155,4 @@
 - [x] Generate a customized visual prototype of a premium glassmorphism server license dashboard for user review.
 - [x] Generate three distinct customized server license control-panel visual concepts for user selection.
 - [x] Diagnose and, if source-confirmed, fix the backup Lua setting persistence path that resets all menu toggles.
+- [x] Correct the backup Lua ESP Type 7 Bot and Player text colors so both labels render visibly and distinctly.
