@@ -160,3 +160,4 @@
 - [x] Diagnose and, if source-confirmed, fix the backup AD ESP Counter distance display so it refreshes while moving.
 - [x] Perform a fresh static audit of all active backup Lua feature paths and report confirmed findings.
 - [x] Statically examine the uploaded dumpbecausenowhynot.lua file and report its observable format and purpose.
+- [x] Diagnose the newly reported backup Lua toggle and slider reset behavior and correct only a confirmed persistence defect.

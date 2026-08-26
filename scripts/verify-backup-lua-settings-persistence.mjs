@@ -14,6 +14,9 @@ const required = [
   ['settings load completion flag', '_G.ModSettingsLoaded = true'],
   ['menu initialization after settings load', 'if _G.ModMenuInitialized then return end'],
   ['config serializer', '_G.SaveModSettings = function()'],
+  ['package-neutral config filename', 'local ConfigFileName = "nexaconfig.json"'],
+  ['prior absolute config migration source', 'local PreviousConfigFileName = "/storage/emulated/0/Android/data/com.pubg.imobile/files/nexaconfig.json"'],
+  ['shared menu persistence trigger', 'if changed ~= false and _G.SaveModSettings then _G.SaveModSettings() end'],
 ];
 
 let failed = false;
@@ -33,5 +36,21 @@ if (initIndex < 0 || loadGuardIndex < 0 || initializedGuardIndex < 0 || loadGuar
   failed = true;
 }
 
+const saveStart = source.indexOf('_G.SaveModSettings = function()');
+const cacheAfterWrite = source.indexOf('_G.LastConfigSaveStr = data', saveStart);
+const writeIndex = source.indexOf('file:write(data)', saveStart);
+if (saveStart < 0 || writeIndex < 0 || cacheAfterWrite < writeIndex) {
+  console.error('FAIL: settings cache must update only after a successful file write');
+  failed = true;
+}
+
+const wrapperStart = source.indexOf('local function GuardMenuStack(stack)');
+const changedIndex = source.indexOf('local changed = originalSet(...)', wrapperStart);
+const persistIndex = source.indexOf('if changed ~= false and _G.SaveModSettings then _G.SaveModSettings() end', wrapperStart);
+if (wrapperStart < 0 || changedIndex < 0 || persistIndex < changedIndex) {
+  console.error('FAIL: guarded standard menu setters must persist successful changes');
+  failed = true;
+}
+
 if (failed) process.exit(1);
-console.log('PASS: backup Lua has authorized one-time settings load before menu initialization');
+console.log('PASS: backup Lua loads settings before menu initialization and persists successful toggle/slider changes');
