@@ -157,3 +157,4 @@
 - [x] Diagnose and, if source-confirmed, fix the backup Lua setting persistence path that resets all menu toggles.
 - [x] Correct the backup Lua ESP Type 7 Bot and Player text colors so both labels render visibly and distinctly.
 - [x] Change the backup Lua AD ESP weapon icon size from 30×20 to 50×30 and validate the focused visual update.
+- [x] Diagnose and, if source-confirmed, fix the backup AD ESP Counter distance display so it refreshes while moving.
