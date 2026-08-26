@@ -151,3 +151,7 @@
 - [x] Apply and validate the focused visual-only Snapline B Point target-attachment refinement in the user-supplied backup Lua only, leaving all other code untouched.
 - [x] Review and, if source-supported, optimize only the backup Snapline B Point update for lower frame-time overhead.
 - [x] Refresh the panel with responsive glassmorphism, restrained neon accents, and subtle performance-conscious live-glass motion.
+- [x] Collect glassmorphism control-panel UI reference images for the user to choose from before any full redesign.
+- [x] Generate a customized visual prototype of a premium glassmorphism server license dashboard for user review.
+- [x] Generate three distinct customized server license control-panel visual concepts for user selection.
+- [x] Diagnose and, if source-confirmed, fix the backup Lua setting persistence path that resets all menu toggles.
