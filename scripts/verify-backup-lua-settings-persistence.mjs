@@ -17,6 +17,9 @@ const required = [
   ['package-neutral config filename', 'local ConfigFileName = "nexaconfig.json"'],
   ['prior absolute config migration source', 'local PreviousConfigFileName = "/storage/emulated/0/Android/data/com.pubg.imobile/files/nexaconfig.json"'],
   ['shared menu persistence trigger', 'if changed ~= false and _G.SaveModSettings then _G.SaveModSettings() end'],
+  ['cross-match write tracking', 'local wroteAny = false'],
+  ['cross-match config path synchronization', 'wroteAny = true'],
+  ['save cache gated by a successful write', 'if wroteAny then _G.LastConfigSaveStr = data end'],
 ];
 
 let failed = false;
@@ -52,5 +55,13 @@ if (wrapperStart < 0 || changedIndex < 0 || persistIndex < changedIndex) {
   failed = true;
 }
 
+const writeLoopIndex = source.indexOf('local wroteAny = false', saveStart);
+const noEarlyBreakIndex = source.indexOf('break', writeLoopIndex);
+const cacheAfterAllWrites = source.indexOf('if wroteAny then _G.LastConfigSaveStr = data end', writeLoopIndex);
+if (writeLoopIndex < 0 || cacheAfterAllWrites < writeLoopIndex || (noEarlyBreakIndex >= writeLoopIndex && noEarlyBreakIndex < cacheAfterAllWrites)) {
+  console.error('FAIL: settings must synchronize every writable config path before caching the payload');
+  failed = true;
+}
+
 if (failed) process.exit(1);
-console.log('PASS: backup Lua loads settings before menu initialization and persists successful toggle/slider changes');
+console.log('PASS: backup Lua loads settings before menu initialization and persists successful toggle/slider changes across writable config paths');

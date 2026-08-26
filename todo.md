@@ -161,3 +161,4 @@
 - [x] Perform a fresh static audit of all active backup Lua feature paths and report confirmed findings.
 - [x] Statically examine the uploaded dumpbecausenowhynot.lua file and report its observable format and purpose.
 - [x] Diagnose the newly reported backup Lua toggle and slider reset behavior and correct only a confirmed persistence defect.
+- [x] Diagnose why backup Lua settings reset on the second match after persisting through the first match, and correct only a confirmed save/load lifecycle defect.
