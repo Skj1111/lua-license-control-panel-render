@@ -162,3 +162,4 @@
 - [x] Statically examine the uploaded dumpbecausenowhynot.lua file and report its observable format and purpose.
 - [x] Diagnose the newly reported backup Lua toggle and slider reset behavior and correct only a confirmed persistence defect.
 - [x] Diagnose why backup Lua settings reset on the second match after persisting through the first match, and correct only a confirmed save/load lifecycle defect.
+- [x] Change the backup Lua settings persistence target to NEXA_settings.txt and validate compatible load behavior.
