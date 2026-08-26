@@ -21,6 +21,8 @@ const required = [
   ['cross-match write tracking', 'local wroteAny = false'],
   ['cross-match config path synchronization', 'wroteAny = true'],
   ['save cache gated by a successful write', 'if wroteAny then _G.LastConfigSaveStr = data end'],
+  ['non-destructive validation transition', 'Do not overwrite saved toggle or slider values while a new match is'],
+  ['non-destructive unauthorized loop', 'Keep persisted preferences intact during lobby/match revalidation.'],
 ];
 
 let failed = false;
@@ -64,5 +66,10 @@ if (writeLoopIndex < 0 || cacheAfterAllWrites < writeLoopIndex || (noEarlyBreakI
   failed = true;
 }
 
+if (source.includes('local function DisableAllFeatureFlags()') || source.includes('if type(value) == "boolean" then _G.LexusConfig[key] = false end')) {
+  console.error('FAIL: authorization transitions must not overwrite persisted boolean settings');
+  failed = true;
+}
+
 if (failed) process.exit(1);
-console.log('PASS: backup Lua loads settings before menu initialization and persists successful toggle/slider changes across writable config paths');
+console.log('PASS: backup Lua preserves settings through revalidation and persists successful toggle/slider changes across writable config paths');
