@@ -164,3 +164,4 @@
 - [x] Diagnose why backup Lua settings reset on the second match after persisting through the first match, and correct only a confirmed save/load lifecycle defect.
 - [x] Change the backup Lua settings persistence target to NEXA_settings.txt and validate compatible load behavior.
 - [x] Diagnose the recurring backup Lua second-match reset after the prior persistence fixes and correct only a confirmed match-lifecycle overwrite.
+- [x] Audit the uploaded BRPlayerCharacterBase.lua login system, including canonical validation, key persistence, callbacks, authorization gates, retry paths, and syntax.
