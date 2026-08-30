@@ -165,3 +165,5 @@
 - [x] Change the backup Lua settings persistence target to NEXA_settings.txt and validate compatible load behavior.
 - [x] Diagnose the recurring backup Lua second-match reset after the prior persistence fixes and correct only a confirmed match-lifecycle overwrite.
 - [x] Audit the uploaded BRPlayerCharacterBase.lua login system, including canonical validation, key persistence, callbacks, authorization gates, retry paths, and syntax.
+- [ ] Repair the uploaded BRPlayerCharacterBase.lua login authorization boundary in a separate fixed output, preserving canonical validation and retry behavior without changing bypass/HWID code.
+- [x] Update the uploaded Lua fixed copy so online canonical authorization is required, offline-expiry enforcement is removed, and unauthorized menu/features remain hidden or disabled.
