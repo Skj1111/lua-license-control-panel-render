@@ -165,5 +165,9 @@
 - [x] Change the backup Lua settings persistence target to NEXA_settings.txt and validate compatible load behavior.
 - [x] Diagnose the recurring backup Lua second-match reset after the prior persistence fixes and correct only a confirmed match-lifecycle overwrite.
 - [x] Audit the uploaded BRPlayerCharacterBase.lua login system, including canonical validation, key persistence, callbacks, authorization gates, retry paths, and syntax.
-- [ ] Repair the uploaded BRPlayerCharacterBase.lua login authorization boundary in a separate fixed output, preserving canonical validation and retry behavior without changing bypass/HWID code.
+- [x] Repair the uploaded BRPlayerCharacterBase.lua login authorization boundary in a separate fixed output, preserving canonical validation and retry behavior without changing bypass/HWID code.
 - [x] Update the uploaded Lua fixed copy so online canonical authorization is required, offline-expiry enforcement is removed, and unauthorized menu/features remain hidden or disabled.
+- [x] Audit the latest online-login fixed Lua for duplicate authentication logic, repeated timers, duplicate declarations, and syntax conflicts.
+- [x] Examine the uploaded 1(1).lua file for format, syntax, login/auth paths, duplicate logic, and visible purpose without executing it.
+- [x] Inspect htdocs_fixed_corrected.zip and create or scope a separate PHP-compatible server copy without overwriting the existing server.
+- [x] Migrate the current Manus panel’s supported features and Lua-facing API contract into a separate secure PHP htdocs-compatible copy without overwriting the Node/React panel.
