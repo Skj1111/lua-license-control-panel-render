@@ -173,3 +173,4 @@
 - [x] Migrate the current Manus panel’s supported features and Lua-facing API contract into a separate secure PHP htdocs-compatible copy without overwriting the Node/React panel.
 - [x] Inspect the uploaded enc.py PAK tool for syntax, dependency, path, format, and output failures without executing or improving bypass behavior.
 - [x] Build and validate a standalone UE4 Zlib-compression UnrealPak wrapper without encryption or bypass functionality.
+- [x] Update the UE4 Zlib wrapper to create required workspace/output folders automatically and validate the behavior.
