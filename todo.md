@@ -176,3 +176,4 @@
 - [x] Update the UE4 Zlib wrapper to create required workspace/output folders automatically and validate the behavior.
 - [x] Inspect UnrealPakTool.zip contents and determine whether it includes a Termux-compatible UE4 UnrealPak binary without executing archive contents.
 - [x] Assess Termux compatibility for the UE4 Zlib wrapper and add safe architecture detection/guidance without reverse-engineering UnrealPak.
+- [x] Build and validate an official-UnrealPak-based UE4 PAK encryption wrapper that accepts a local authorized Crypto.json without logging key material.
