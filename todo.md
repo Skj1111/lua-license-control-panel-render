@@ -174,3 +174,5 @@
 - [x] Inspect the uploaded enc.py PAK tool for syntax, dependency, path, format, and output failures without executing or improving bypass behavior.
 - [x] Build and validate a standalone UE4 Zlib-compression UnrealPak wrapper without encryption or bypass functionality.
 - [x] Update the UE4 Zlib wrapper to create required workspace/output folders automatically and validate the behavior.
+- [x] Inspect UnrealPakTool.zip contents and determine whether it includes a Termux-compatible UE4 UnrealPak binary without executing archive contents.
+- [x] Assess Termux compatibility for the UE4 Zlib wrapper and add safe architecture detection/guidance without reverse-engineering UnrealPak.
