@@ -31,7 +31,7 @@
 - [x] Inspect and restore the missing V2 Custom Colour Menu in the supplied gameplay Lua without changing unrelated features or panel integration.
 - [x] Syntax-check the V2 Custom Colour Menu restoration and verify its menu bindings before delivery.
 - [ ] Enforce a fail-closed authorization gate so the gameplay menu stays hidden and all feature execution stays blocked until canonical panel login succeeds.
-- [ ] Syntax-check and verify the strict menu/feature authorization guards before delivery.
+- [x] Syntax-check and verify the strict menu/feature authorization guards before delivery.
 - [x] Audit all feature entry points outside MainLoop—including timers, hooks, callbacks, and persisted-config application—and add unauthorized early returns where required.
 - [x] Centralize menu authorization and gate every generated menu GetFunc and SetFunc path before panel login.
 - [x] Add a repeatable guard-inspection regression that proves unauthorized state strips the menu and blocks saved enabled-feature paths.
@@ -42,7 +42,7 @@
 - [x] Document invalid-key and valid-key runtime smoke plans, including the current limitation that Android runtime execution must be performed by the owner.
 - [ ] Perform owner-side Android runtime smoke checks for an invalid/missing key and a valid panel key, then report the observed menu and feature behavior.
 - [x] Add an Enter Your Key popup that accepts a pasted panel key, safely writes key.json, and starts canonical validation without altering gameplay features.
-- [ ] Syntax-check and verify the key-entry popup, key.json persistence, and validation handoff before delivery.
+- [x] Syntax-check and verify the key-entry popup, key.json persistence, and validation handoff before delivery.
 - [x] Add a repeatable source-level regression that checks the popup input, valid-response-only key.json write, and canonical request handoff.
 - [x] Fix the key-entry popup cancel/retry path so cancellation does not leave login permanently blocked, then cover it in the regression.
 - [ ] Perform owner-side Android popup smoke checks for cancel/retry, invalid-key handling, and key.json creation after a valid panel login.
@@ -177,3 +177,4 @@
 - [x] Inspect UnrealPakTool.zip contents and determine whether it includes a Termux-compatible UE4 UnrealPak binary without executing archive contents.
 - [x] Assess Termux compatibility for the UE4 Zlib wrapper and add safe architecture detection/guidance without reverse-engineering UnrealPak.
 - [x] Build and validate an official-UnrealPak-based UE4 PAK encryption wrapper that accepts a local authorized Crypto.json without logging key material.
+- [x] Safely inspect uploaded if0_42168703_nexa_panel.sql.zip for schema, credentials, and destructive SQL without executing it.
