@@ -181,3 +181,5 @@
 - [x] Generate a non-destructive, secret-free SQL update artifact mapped to the current Lua License Control Panel schema.
 - [x] Perform a read-only static audit of FailClose-NoRestriction-Main-Paste-Template.lua for syntax, authorization gates, feature paths, duplicate logic, and safety markers without executing or modifying it.
 - [x] Prepare a paste-ready main-Lua integration pattern that runs the complete gameplay code only after canonical license authorization, without inventing unavailable gameplay code.
+- [ ] Audit MODMENUUI-NEXANEON-2.lua and integrate it into the current-panel fail-closed wrapper only if syntax and authorization compatibility are verified.
+- [x] Create and integrate a UI-only dummy main Lua with the current-panel fail-closed wrapper; do not enable gameplay-advantage hooks or modify the original uploaded file.
