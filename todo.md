@@ -31,7 +31,7 @@
 - [x] Inspect and restore the missing V2 Custom Colour Menu in the supplied gameplay Lua without changing unrelated features or panel integration.
 - [x] Syntax-check the V2 Custom Colour Menu restoration and verify its menu bindings before delivery.
 - [ ] Enforce a fail-closed authorization gate so the gameplay menu stays hidden and all feature execution stays blocked until canonical panel login succeeds.
-- [x] Syntax-check and verify the strict menu/feature authorization guards before delivery.
+- [ ] Syntax-check and verify the strict menu/feature authorization guards before delivery.
 - [x] Audit all feature entry points outside MainLoop—including timers, hooks, callbacks, and persisted-config application—and add unauthorized early returns where required.
 - [x] Centralize menu authorization and gate every generated menu GetFunc and SetFunc path before panel login.
 - [x] Add a repeatable guard-inspection regression that proves unauthorized state strips the menu and blocks saved enabled-feature paths.
@@ -42,7 +42,7 @@
 - [x] Document invalid-key and valid-key runtime smoke plans, including the current limitation that Android runtime execution must be performed by the owner.
 - [ ] Perform owner-side Android runtime smoke checks for an invalid/missing key and a valid panel key, then report the observed menu and feature behavior.
 - [x] Add an Enter Your Key popup that accepts a pasted panel key, safely writes key.json, and starts canonical validation without altering gameplay features.
-- [x] Syntax-check and verify the key-entry popup, key.json persistence, and validation handoff before delivery.
+- [ ] Syntax-check and verify the key-entry popup, key.json persistence, and validation handoff before delivery.
 - [x] Add a repeatable source-level regression that checks the popup input, valid-response-only key.json write, and canonical request handoff.
 - [x] Fix the key-entry popup cancel/retry path so cancellation does not leave login permanently blocked, then cover it in the regression.
 - [ ] Perform owner-side Android popup smoke checks for cancel/retry, invalid-key handling, and key.json creation after a valid panel login.
@@ -98,7 +98,7 @@
 - [ ] Confirm the current live announcement endpoint state and obtain owner-side Android confirmation after an announcement is enabled.
 - [x] Remove the vehicle-skin and vehicle-presentation customization feature while preserving unrelated vehicle handling.
 - [x] Verify that no vehicle-skin menu, configuration, or active runtime hook remains after removal.
-- [x] Scan and classify any remaining skin or avatar customization features in the latest Lua without changing code.
+- [ ] Scan and classify any remaining skin or avatar customization features in the latest Lua without changing code.
 - [x] Remove weapon and outfit skin substitution from kill-message handling while preserving normal kill-message and kill-counter behavior.
 - [x] Verify no removed kill-message skin substitution markers or controls remain in the latest Lua.
 - [x] Remove or permanently fail-close the remaining user-facing kill-message skin control and binding.
@@ -158,28 +158,3 @@
 - [x] Correct the backup Lua ESP Type 7 Bot and Player text colors so both labels render visibly and distinctly.
 - [x] Change the backup Lua AD ESP weapon icon size from 30×20 to 50×30 and validate the focused visual update.
 - [x] Diagnose and, if source-confirmed, fix the backup AD ESP Counter distance display so it refreshes while moving.
-- [x] Perform a fresh static audit of all active backup Lua feature paths and report confirmed findings.
-- [x] Statically examine the uploaded dumpbecausenowhynot.lua file and report its observable format and purpose.
-- [x] Diagnose the newly reported backup Lua toggle and slider reset behavior and correct only a confirmed persistence defect.
-- [x] Diagnose why backup Lua settings reset on the second match after persisting through the first match, and correct only a confirmed save/load lifecycle defect.
-- [x] Change the backup Lua settings persistence target to NEXA_settings.txt and validate compatible load behavior.
-- [x] Diagnose the recurring backup Lua second-match reset after the prior persistence fixes and correct only a confirmed match-lifecycle overwrite.
-- [x] Audit the uploaded BRPlayerCharacterBase.lua login system, including canonical validation, key persistence, callbacks, authorization gates, retry paths, and syntax.
-- [x] Repair the uploaded BRPlayerCharacterBase.lua login authorization boundary in a separate fixed output, preserving canonical validation and retry behavior without changing bypass/HWID code.
-- [x] Update the uploaded Lua fixed copy so online canonical authorization is required, offline-expiry enforcement is removed, and unauthorized menu/features remain hidden or disabled.
-- [x] Audit the latest online-login fixed Lua for duplicate authentication logic, repeated timers, duplicate declarations, and syntax conflicts.
-- [x] Examine the uploaded 1(1).lua file for format, syntax, login/auth paths, duplicate logic, and visible purpose without executing it.
-- [x] Inspect htdocs_fixed_corrected.zip and create or scope a separate PHP-compatible server copy without overwriting the existing server.
-- [x] Migrate the current Manus panel’s supported features and Lua-facing API contract into a separate secure PHP htdocs-compatible copy without overwriting the Node/React panel.
-- [x] Inspect the uploaded enc.py PAK tool for syntax, dependency, path, format, and output failures without executing or improving bypass behavior.
-- [x] Build and validate a standalone UE4 Zlib-compression UnrealPak wrapper without encryption or bypass functionality.
-- [x] Update the UE4 Zlib wrapper to create required workspace/output folders automatically and validate the behavior.
-- [x] Inspect UnrealPakTool.zip contents and determine whether it includes a Termux-compatible UE4 UnrealPak binary without executing archive contents.
-- [x] Assess Termux compatibility for the UE4 Zlib wrapper and add safe architecture detection/guidance without reverse-engineering UnrealPak.
-- [x] Build and validate an official-UnrealPak-based UE4 PAK encryption wrapper that accepts a local authorized Crypto.json without logging key material.
-- [x] Safely inspect uploaded if0_42168703_nexa_panel.sql.zip for schema, credentials, and destructive SQL without executing it.
-- [x] Generate a non-destructive, secret-free SQL update artifact mapped to the current Lua License Control Panel schema.
-- [x] Perform a read-only static audit of FailClose-NoRestriction-Main-Paste-Template.lua for syntax, authorization gates, feature paths, duplicate logic, and safety markers without executing or modifying it.
-- [x] Prepare a paste-ready main-Lua integration pattern that runs the complete gameplay code only after canonical license authorization, without inventing unavailable gameplay code.
-- [ ] Audit MODMENUUI-NEXANEON-2.lua and integrate it into the current-panel fail-closed wrapper only if syntax and authorization compatibility are verified.
-- [x] Create and integrate a UI-only dummy main Lua with the current-panel fail-closed wrapper; do not enable gameplay-advantage hooks or modify the original uploaded file.
