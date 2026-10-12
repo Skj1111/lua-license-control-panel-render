@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { API_ERROR_CODES, canAccessLicense, canRemoveOwnerAccount, durationToMinutes, evaluateLicenseValidation, GENERATED_LICENSE_KEY_MAX_LENGTH, generateLicenseKey, getActivationTransition, getApiSharedSecret, getUsernameChangeAvailability, hashDevice, hasUnexpiredCustomPrefixConflict, indexBindingCounts, isDeviceLimitReached, isReferralDeletable, isReferralUsable, isSafeReplacementBindingSource, isUserClearable, normalizeKeyPrefix, normalizeUsername, RECENT_AUDIT_LOG_LIMIT, USERNAME_CHANGE_COOLDOWN_MS, usernameToKeyPrefix } from "./license";
+import { API_ERROR_CODES, canAccessLicense, canRemoveOwnerAccount, durationToMinutes, evaluateLicenseValidation, GENERATED_LICENSE_KEY_MAX_LENGTH, generateLicenseKey, getActivationTransition, getApiSharedSecret, getUsernameChangeAvailability, hashDevice, hasUnexpiredCustomPrefixConflict, indexBindingCounts, isDeviceLimitReached, isReferralDeletable, isReferralUsable, isSafeReplacementBindingSource, isUserClearable, normalizeExactCustomKey, normalizeKeyPrefix, normalizeUsername, RECENT_AUDIT_LOG_LIMIT, USERNAME_CHANGE_COOLDOWN_MS, usernameToKeyPrefix } from "./license";
 
 describe("license control invariants", () => {
   it("generates a non-empty panel-compatible key", () => {
@@ -11,6 +11,8 @@ describe("license control invariants", () => {
   it("supports a custom key prefix while preserving a unique suffix", () => {
     expect(generateLicenseKey("Alexa")).toMatch(/^ALEXA-[A-Z0-9X]+$/);
     expect(normalizeKeyPrefix("  game access  ")).toBe("GAME-ACCESS");
+    expect(normalizeExactCustomKey("  Alexa-Delta-2026  ")).toBe("Alexa-Delta-2026");
+    expect(() => normalizeExactCustomKey("ALEXA DELTA")).toThrow();
   });
 
   it("normalizes safe recognizable usernames while rejecting invalid onboarding input", () => {

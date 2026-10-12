@@ -127,6 +127,13 @@ export function normalizeKeyPrefix(prefix: string | undefined) {
   if (!normalized || normalized.length > 24) throw new Error("Custom key name must contain 1–24 letters or numbers");
   return normalized;
 }
+export function normalizeExactCustomKey(value: string | undefined) {
+  const key = value?.trim() ?? "";
+  if (key.length < 8 || key.length > 64 || !/^[A-Za-z0-9-]+$/.test(key)) {
+    throw new Error("Custom key must be 8–64 characters using only letters, numbers, and hyphens");
+  }
+  return key;
+}
 
 export function hasUnexpiredCustomPrefixConflict(keys: Array<{ keyValue: string; expiresAt: Date | null; status?: CanonicalLicenseStatus }>, prefix: string, now = new Date()) {
   const safePrefix = normalizeKeyPrefix(prefix);
@@ -239,12 +246,14 @@ export async function generateKey(durationMinutes: number, createdByUserId: numb
   const db = await getDb();
   if (!db) throw new Error("Database unavailable");
   if (!Number.isInteger(durationMinutes) || durationMinutes < 1 || durationMinutes > 5256000) throw new Error("License duration must be between 1 minute and 10 years");
-  const safePrefix = customPrefix?.trim() ? normalizeKeyPrefix(customPrefix) : usernameToKeyPrefix(creatorUsername) ?? "LUA";
-  if (customPrefix?.trim()) {
-    const existing = await db.select({ keyValue: licenses.keyValue, expiresAt: licenses.expiresAt, status: licenses.status }).from(licenses).where(like(licenses.keyValue, `${safePrefix}-%`)).limit(1);
-    if (existing.length && hasUnexpiredCustomPrefixConflict(existing, safePrefix)) throw new Error(`Custom key name ${safePrefix} already exists until its key expires or is deleted`);
+  const exactCustomKey = customPrefix?.trim() ? normalizeExactCustomKey(customPrefix) : undefined;
+  if (exactCustomKey) {
+    const existing = await db.select({ keyValue: licenses.keyValue, expiresAt: licenses.expiresAt, status: licenses.status }).from(licenses).where(eq(licenses.keyValue, exactCustomKey)).limit(1);
+    if (existing.length && existing[0].status !== "revoked" && (!existing[0].expiresAt || existing[0].expiresAt.getTime() > Date.now())) {
+      throw new Error(`Custom key ${exactCustomKey} already exists until it expires or is deleted`);
+    }
   }
-  const keyValue = generateLicenseKey(safePrefix);
+  const keyValue = exactCustomKey ?? generateLicenseKey(usernameToKeyPrefix(creatorUsername) ?? "LUA");
   const inserted = await db.insert(licenses).values({ keyValue, expiresAt: null, activatedAt: null, durationMinutes, createdByUserId, status: "unused", maxDevices });
   await recordAudit(createdByUserId, "key_created", "license", Number(inserted[0].insertId), keyValue, `durationMinutes=${durationMinutes};activation=pending;maxDevices=${maxDevices}`);
   return { keyValue, expiresAt: null, activatedAt: null, durationMinutes, maxDevices };

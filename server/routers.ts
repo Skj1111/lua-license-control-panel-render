@@ -53,7 +53,7 @@ export const appRouter = router({
       durationAmount: z.number().int().min(1).max(5256000),
       durationUnit: z.enum(LICENSE_DURATION_UNITS),
       maxDevices: z.number().int().min(1).max(100),
-      customPrefix: z.string().max(24).optional(),
+      customPrefix: z.string().max(64).optional(),
     }).superRefine((input, ctx) => {
       if (durationToMinutes(input.durationAmount, input.durationUnit) > 5256000) ctx.addIssue({ code: "custom", path: ["durationAmount"], message: "License duration cannot exceed 10 years" });
     })).mutation(({ input, ctx }) => {

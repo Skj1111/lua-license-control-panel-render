@@ -18,7 +18,10 @@ export function validateLicenseGenerationInput(input: {
     return { isValid: false, error: "Enter a whole device limit between 1 and 100." };
   }
   if (input.customEnabled && !input.customPrefix.trim()) {
-    return { isValid: false, error: "Enter a custom key name or disable custom key name." };
+    return { isValid: false, error: "Enter an exact custom key or disable custom key mode." };
+  }
+  if (input.customEnabled && !/^[A-Za-z0-9-]{8,64}$/.test(input.customPrefix.trim())) {
+    return { isValid: false, error: "Custom key must be 8–64 characters using only letters, numbers, and hyphens." };
   }
 
   return {

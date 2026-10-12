@@ -9,7 +9,9 @@ describe("license management form validation", () => {
 
     expect(invalidDuration).toEqual({ isValid: false, error: "Enter a whole activation duration between 1 and 5,256,000." });
     expect(invalidDevices).toEqual({ isValid: false, error: "Enter a whole device limit between 1 and 100." });
-    expect(missingCustomName).toEqual({ isValid: false, error: "Enter a custom key name or disable custom key name." });
+    expect(missingCustomName).toEqual({ isValid: false, error: "Enter an exact custom key or disable custom key mode." });
+    const invalidCustomCharacters = validateLicenseGenerationInput({ durationAmount: "30", maxDevices: "1", customEnabled: true, customPrefix: "ALEXA DELTA" });
+    expect(invalidCustomCharacters).toEqual({ isValid: false, error: "Custom key must be 8–64 characters using only letters, numbers, and hyphens." });
   });
 
   it("blocks invalid management updates and only returns a mutation-ready payload when valid", () => {
