@@ -129,8 +129,8 @@ export function normalizeKeyPrefix(prefix: string | undefined) {
 }
 export function normalizeExactCustomKey(value: string | undefined) {
   const key = value?.trim() ?? "";
-  if (key.length < 8 || key.length > 64 || !/^[A-Za-z0-9-]+$/.test(key)) {
-    throw new Error("Custom key must be 8–64 characters using only letters, numbers, and hyphens");
+  if (key.length < 4 || key.length > 64 || !/^[A-Za-z0-9-]+$/.test(key)) {
+    throw new Error("Custom key must be 4–64 characters using only letters, numbers, and hyphens");
   }
   return key;
 }

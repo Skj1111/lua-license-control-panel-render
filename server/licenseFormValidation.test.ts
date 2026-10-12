@@ -11,7 +11,9 @@ describe("license management form validation", () => {
     expect(invalidDevices).toEqual({ isValid: false, error: "Enter a whole device limit between 1 and 100." });
     expect(missingCustomName).toEqual({ isValid: false, error: "Enter an exact custom key or disable custom key mode." });
     const invalidCustomCharacters = validateLicenseGenerationInput({ durationAmount: "30", maxDevices: "1", customEnabled: true, customPrefix: "ALEXA DELTA" });
-    expect(invalidCustomCharacters).toEqual({ isValid: false, error: "Custom key must be 8–64 characters using only letters, numbers, and hyphens." });
+    expect(invalidCustomCharacters).toEqual({ isValid: false, error: "Custom key must be 4–64 characters using only letters, numbers, and hyphens." });
+    const exactNexa = validateLicenseGenerationInput({ durationAmount: "30", maxDevices: "1", customEnabled: true, customPrefix: "NEXA" });
+    expect(exactNexa).toEqual({ isValid: true, value: { durationAmount: 30, maxDevices: 1, customPrefix: "NEXA" } });
   });
 
   it("blocks invalid management updates and only returns a mutation-ready payload when valid", () => {

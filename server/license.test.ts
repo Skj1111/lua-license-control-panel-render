@@ -11,6 +11,7 @@ describe("license control invariants", () => {
   it("supports a custom key prefix while preserving a unique suffix", () => {
     expect(generateLicenseKey("Alexa")).toMatch(/^ALEXA-[A-Z0-9X]+$/);
     expect(normalizeKeyPrefix("  game access  ")).toBe("GAME-ACCESS");
+    expect(normalizeExactCustomKey("NEXA")).toBe("NEXA");
     expect(normalizeExactCustomKey("  Alexa-Delta-2026  ")).toBe("Alexa-Delta-2026");
     expect(() => normalizeExactCustomKey("ALEXA DELTA")).toThrow();
   });
