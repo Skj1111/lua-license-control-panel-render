@@ -119,3 +119,20 @@ button, input { font: inherit; }
   border-radius: 50%;
   box-shadow: 0 0 10px #67e8f9;
 }
+.cyber-slider-track {
+  background: rgba(103, 232, 249, 0.1);
+  height: 4px;
+  border-radius: 2px;
+}
+.cyber-slider-range {
+  background: #67e8f9;
+  box-shadow: 0 0 10px #67e8f9;
+}
+.cyber-slider-thumb {
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border: 2px solid #67e8f9;
+  border-radius: 50%;
+  cursor: pointer;
+}
