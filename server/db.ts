@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
+import crypto from "node:crypto";
 import { InsertUser, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -90,6 +91,53 @@ export async function getUserByOpenId(openId: string) {
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
 
   return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserByUsername(username: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createLocalUser(username: string, passwordHash: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database unavailable");
+  const now = new Date();
+  const openId = `local_${crypto.randomUUID()}`;
+  await db.insert(users).values({
+    openId,
+    name: username,
+    username,
+    passwordHash,
+    loginMethod: "password",
+    role: "admin",
+    accessStatus: "pending",
+    lastSignedIn: now,
+  });
+  const created = await getUserByOpenId(openId);
+  if (!created) throw new Error("Local account could not be created");
+  return created;
+}
+
+export async function setLocalCredentials(userId: number, username: string, passwordHash: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database unavailable");
+  await db.update(users).set({
+    name: username,
+    username,
+    passwordHash,
+    loginMethod: "password",
+    updatedAt: new Date(),
+  }).where(eq(users.id, userId));
+  const result = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  return result[0];
+}
+
+export async function touchUserLastSignedIn(userId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ lastSignedIn: new Date() }).where(eq(users.id, userId));
 }
 
 // TODO: add feature queries here as your schema grows.

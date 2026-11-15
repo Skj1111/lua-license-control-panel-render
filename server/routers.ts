@@ -2,12 +2,15 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { router, publicProcedure, protectedProcedure, adminProcedure, ownerProcedure, superOwnerProcedure } from "./_core/trpc";
-import { ENV } from "./_core/env";
-import { COOKIE_NAME } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { getDb } from "./db";
 import { users } from "../drizzle/schema";
+import { createLocalUser, getUserByUsername } from "./db";
+import { hashPassword, verifyPassword, getLoginRateLimitKey, isLoginRateLimited, recordFailedLogin, clearFailedLogins } from "./passwordAuth";
+import { SignJWT } from "jose";
+import { ENV } from "./_core/env";
+import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { getSessionCookieOptions } from "./_core/cookies";
 import { changeUsername, createReferral, deleteAllKeys, deleteAllReferrals, deleteKey, deleteReferral, deleteUser, durationToMinutes, generateKey, getActiveSystemAnnouncement, getAllKeysOverview, getApiSharedSecret, getBindings, getReferralOverview, getSeasonControlCounts, getStats, getSystemAnnouncement, getUsernameChangeAvailability, LICENSE_DURATION_UNITS, listAuditLogs, listKeys, listReferrals, listUsers, promoteConfiguredSuperOwner, redeemReferral, removeOwnerAccess, revokeReferral, setAdminAccess, setKeyStatus, setUsername, unbindDevice, updateLicense, updateSystemAnnouncement } from "./license";
 import { getServerMaintenance, updateServerMaintenance } from "./maintenance";
 import { createTelegramScope, getTelegramChannel, getTelegramSettings, getTelegramSetupState, listTelegramChannels, listTelegramScopeCandidates, mapTelegramLicense, normalizeTelegramChannelUrl, saveTelegramChannel, updateTelegramSettings } from "./telegram";
@@ -28,6 +31,24 @@ export const appRouter = router({
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
+    login: publicProcedure.input(z.object({ username: z.string(), password: z.string() })).mutation(async ({ input, ctx }) => {
+      const rateKey = getLoginRateLimitKey(input.username, ctx.req.ip);
+      if (isLoginRateLimited(rateKey)) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+      const user = await getUserByUsername(input.username);
+      if (!user || !verifyPassword(input.password, user.passwordHash)) {
+        recordFailedLogin(rateKey);
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      clearFailedLogins(rateKey);
+      const token = await new SignJWT({ openId: user.openId }).setProtectedHeader({ alg: "HS256" }).setExpirationTime("1y").sign(new TextEncoder().encode(ENV.cookieSecret));
+      ctx.res.cookie(COOKIE_NAME, token, { ...getSessionCookieOptions(ctx.req), maxAge: ONE_YEAR_MS });
+      return { success: true };
+    }),
+    register: publicProcedure.input(z.object({ username: z.string().min(3), password: z.string().min(8) })).mutation(async ({ input }) => {
+      if (await getUserByUsername(input.username)) throw new TRPCError({ code: "CONFLICT" });
+      await createLocalUser(input.username, hashPassword(input.password));
+      return { success: true };
+    }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
