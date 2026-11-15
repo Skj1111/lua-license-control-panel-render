@@ -1,0 +1,8 @@
+{
+  "name": "LicenseX",
+  "description": "Cyberpunk HUD control panel for issuing, binding, and revoking Lua license keys, managing referrals, Telegram channels, system announcements, and maintenance holds.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

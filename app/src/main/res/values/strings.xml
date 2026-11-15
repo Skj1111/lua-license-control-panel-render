@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">LicenseX</string>
+    <string name="control_panel_subtitle">CONTROL PANEL</string>
+    <string name="auth_bus_title">AUTHENTICATION BUS</string>
+    <string name="auth_create_account">CREATE ACCOUNT</string>
+    <string name="command_center_title">COMMAND CENTER</string>
+    <string name="command_center_subtitle">Issue, bind, and revoke access keys across your Lua deployment surface.</string>
+    <string name="super_owner_overview_title">GLOBAL OVERVIEW</string>
+    <string name="system_control_title">SYSTEM CONTROL</string>
+    <string name="announcement_control_title">ANNOUNCEMENT CONTROL</string>
+    <string name="all_panel_keys_title">ALL PANEL KEYS</string>
+    <string name="cd_brand_logo">LicenseX Shield Logo</string>
+    <string name="cd_hud_banner">Cyberpunk HUD Command Center Banner</string>
+    <string name="cd_sign_out">Sign out</string>
+    <string name="cd_copy_key">Copy key JSON</string>
+    <string name="cd_refresh">Refresh registry</string>
+    <string name="cd_delete_key">Delete key</string>
+    <string name="cd_unbind_device">Unbind device</string>
+    <string name="cd_toggle_key_status">Toggle key status</string>
+    <string name="cd_navigate_back">Navigate back</string>
+</resources>
