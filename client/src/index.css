@@ -94,3 +94,28 @@ button, input { font: inherit; }
 @keyframes live-glass-drift { from { transform: translate3d(-1.5%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.04); } }
 
 @media (max-width: 640px) { .table-row td, .table-head th { padding-left: 10px; padding-right: 10px; } .key-chip { max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+/* PUBG-style UI components */
+.hud-panel {
+  background: linear-gradient(180deg, #0f1017 0%, #161a22 100%);
+  border: 1px solid rgba(103, 232, 249, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+.cyber-input {
+  background: #090b10 !important;
+  border: 1px solid rgba(103, 232, 249, 0.3) !important;
+  color: #e2e8f0;
+}
+.cyber-button {
+  background: linear-gradient(90deg, #06b6d4 0%, #ec4899 100%) !important;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+.cyber-slider-thumb {
+  width: 16px;
+  height: 16px;
+  background: #67e8f9;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #67e8f9;
+}

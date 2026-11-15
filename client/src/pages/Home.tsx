@@ -31,7 +31,17 @@ const toDateTimeLocal = (value: Date | string) => {
 const licenseStatusClass = (status: "active" | "expired" | "revoked" | "unused") => ({ active: "status-active", expired: "status-expired", revoked: "status-revoked", unused: "status-muted" })[status];
 
 export default function Home() {
-  const { user, logout } = useAuth();
+  const { user, logout, login, isLoggingIn } = useAuth();
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const registerMutation = trpc.auth.register.useMutation({
+    onSuccess: () => {
+      toast.success("Account created — please login");
+      setIsRegistering(false);
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
   const apiOrigin = typeof window === "undefined" ? "https://YOUR-PANEL-DOMAIN" : window.location.origin;
   const identity = trpc.dashboard.identity.useQuery();
   const isSuperOwner = identity.data?.role === "super_owner";
@@ -120,6 +130,25 @@ export default function Home() {
     { label: "revoked keys", value: stats.data?.revokedKeys ?? 0, icon: ShieldAlert, color: "text-pink-300" },
     { label: "total device bindings", value: stats.data?.totalDeviceBindings ?? 0, icon: Link2Off, color: "text-violet-300" },
   ];
+
+  if (!user) return (
+    <div className="min-h-screen grid place-items-center bg-[#07070b] p-6 text-slate-100">
+      <Card className="hud-panel w-full max-w-md border-cyan-300/20 p-8 shadow-2xl shadow-cyan-950/20">
+        <div className="brand-mark mb-6">LX</div>
+        <h1 className="neon-heading text-3xl mt-3">{isRegistering ? "CREATE ACCOUNT" : "AUTHENTICATION BUS"}</h1>
+        <div className="mt-8 space-y-4">
+          <Input placeholder="Username" value={credentials.username} onChange={e => setCredentials({...credentials, username: e.target.value})} className="cyber-input" />
+          <Input type="password" placeholder="Password" value={credentials.password} onChange={e => setCredentials({...credentials, password: e.target.value})} className="cyber-input" />
+          <Button className="cyber-button w-full h-12 mt-4" disabled={isLoggingIn || registerMutation.isPending} onClick={() => isRegistering ? registerMutation.mutate(credentials) : login(credentials)}>
+            {isLoggingIn || registerMutation.isPending ? "PROCESSING…" : isRegistering ? "REGISTER" : "LOGIN"}
+          </Button>
+          <Button variant="ghost" className="w-full text-slate-500 hover:text-cyan-300 uppercase tracking-[.1em] text-xs" onClick={() => setIsRegistering(!isRegistering)}>
+            {isRegistering ? "Back to login" : "Need an account? Register"}
+          </Button>
+        </div>
+      </Card>
+    </div>
+  );
 
   if (identity.isLoading) return <section className="grid min-h-[60vh] place-items-center"><Card className="hud-panel w-full max-w-xl"><CardContent className="p-8"><p className="eyebrow">PERMISSION BUS // SYNCHRONIZING</p><h1 className="neon-heading mt-3 text-3xl">LOADING CONTROL SCOPE</h1><p className="mt-4 text-sm leading-6 text-slate-400">Confirming your server-enforced role, access status, and allowed management surface.</p><div className="mt-6 h-1.5 overflow-hidden rounded-full bg-cyan-300/10"><div className="h-full w-2/3 animate-pulse bg-gradient-to-r from-cyan-300 to-pink-400" /></div></CardContent></Card></section>;
   if (identity.error) return <section className="grid min-h-[60vh] place-items-center"><Card className="hud-panel w-full max-w-xl"><CardContent className="p-8"><p className="eyebrow text-pink-300">PERMISSION BUS // UNAVAILABLE</p><h1 className="neon-heading mt-3 text-3xl">ACCESS CHECK FAILED</h1><p className="mt-4 text-sm leading-6 text-slate-400">The panel could not confirm your role. No license-management actions have been enabled. Refresh the page or sign in again.</p><Button className="cyber-button mt-6" onClick={() => void identity.refetch()}>RETRY ACCESS CHECK</Button></CardContent></Card></section>;
