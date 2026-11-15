@@ -30,8 +30,8 @@
 - [x] Syntax-check the updated BRPlayerCharacterBase.lua and verify its canonical endpoint configuration before delivery.
 - [x] Inspect and restore the missing V2 Custom Colour Menu in the supplied gameplay Lua without changing unrelated features or panel integration.
 - [x] Syntax-check the V2 Custom Colour Menu restoration and verify its menu bindings before delivery.
-- [ ] Enforce a fail-closed authorization gate so the gameplay menu stays hidden and all feature execution stays blocked until canonical panel login succeeds.
-- [ ] Syntax-check and verify the strict menu/feature authorization guards before delivery.
+- [x] Enforce a fail-closed authorization gate so the gameplay menu stays hidden and all feature execution stays blocked until canonical panel login succeeds.
+- [x] Syntax-check and verify the strict menu/feature authorization guards before delivery.
 - [x] Audit all feature entry points outside MainLoop—including timers, hooks, callbacks, and persisted-config application—and add unauthorized early returns where required.
 - [x] Centralize menu authorization and gate every generated menu GetFunc and SetFunc path before panel login.
 - [x] Add a repeatable guard-inspection regression that proves unauthorized state strips the menu and blocks saved enabled-feature paths.

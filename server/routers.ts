@@ -59,13 +59,13 @@ export const appRouter = router({
     identity: protectedProcedure.query(async ({ ctx }) => {
       await promoteConfiguredSuperOwner(ctx.user.openId);
       const usernameChange = getUsernameChangeAvailability(ctx.user.usernameChangedAt);
-      return { role: ctx.user.openId === ENV.ownerOpenId ? "super_owner" as const : ctx.user.role, accessStatus: ctx.user.accessStatus, username: ctx.user.username, email: ctx.user.email, usernameChangedAt: ctx.user.usernameChangedAt, usernameChangeAvailable: usernameChange.available, usernameChangeAvailableAt: usernameChange.nextAllowedAt };
+      return { role: ctx.user.role, accessStatus: ctx.user.accessStatus, username: ctx.user.username, email: ctx.user.email, usernameChangedAt: ctx.user.usernameChangedAt, usernameChangeAvailable: usernameChange.available, usernameChangeAvailableAt: usernameChange.nextAllowedAt };
     }),
     overview: ownerProcedure.query(async ({ ctx }) => getStats({ id: ctx.user.id, isOwner: true })),
-    keys: adminProcedure.query(async ({ ctx }) => listKeys({ id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" || ctx.user.openId === ENV.ownerOpenId })),
+    keys: adminProcedure.query(async ({ ctx }) => listKeys({ id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" })),
     homeKeys: adminProcedure.query(async ({ ctx }) => listKeys({ id: ctx.user.id, isOwner: false })),
     users: ownerProcedure.query(async () => listUsers()),
-    bindings: adminProcedure.input(z.object({ keyId: z.number().int().positive() })).query(async ({ input, ctx }) => getBindings(input.keyId, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" || ctx.user.openId === ENV.ownerOpenId })),
+    bindings: adminProcedure.input(z.object({ keyId: z.number().int().positive() })).query(async ({ input, ctx }) => getBindings(input.keyId, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" })),
     apiConfig: ownerProcedure.query(() => ({ sharedSecret: getApiSharedSecret() })),
     audit: ownerProcedure.query(() => listAuditLogs()),
   }),
@@ -81,10 +81,10 @@ export const appRouter = router({
       const durationMinutes = durationToMinutes(input.durationAmount, input.durationUnit);
       return generateKey(durationMinutes, ctx.user.id, input.customPrefix, input.maxDevices, ctx.user.username);
     }),
-    setStatus: adminProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["active", "expired", "revoked", "unused"]) })).mutation(({ input, ctx }) => setKeyStatus(input.id, input.status, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" || ctx.user.openId === ENV.ownerOpenId })),
-    update: adminProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["active", "expired", "revoked", "unused"]), expiresAt: z.coerce.date().optional(), maxDevices: z.number().int().min(1).max(100) })).mutation(({ input, ctx }) => updateLicense(input.id, { status: input.status, expiresAt: input.expiresAt, maxDevices: input.maxDevices }, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" || ctx.user.openId === ENV.ownerOpenId })),
-    delete: adminProcedure.input(z.object({ id: z.number().int().positive() })).mutation(({ input, ctx }) => deleteKey(input.id, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" || ctx.user.openId === ENV.ownerOpenId })),
-    unbind: adminProcedure.input(z.object({ bindingId: z.number().int().positive() })).mutation(({ input, ctx }) => unbindDevice(input.bindingId, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" || ctx.user.openId === ENV.ownerOpenId })),
+    setStatus: adminProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["active", "expired", "revoked", "unused"]) })).mutation(({ input, ctx }) => setKeyStatus(input.id, input.status, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" })),
+    update: adminProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["active", "expired", "revoked", "unused"]), expiresAt: z.coerce.date().optional(), maxDevices: z.number().int().min(1).max(100) })).mutation(({ input, ctx }) => updateLicense(input.id, { status: input.status, expiresAt: input.expiresAt, maxDevices: input.maxDevices }, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" })),
+    delete: adminProcedure.input(z.object({ id: z.number().int().positive() })).mutation(({ input, ctx }) => deleteKey(input.id, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" })),
+    unbind: adminProcedure.input(z.object({ bindingId: z.number().int().positive() })).mutation(({ input, ctx }) => unbindDevice(input.bindingId, { id: ctx.user.id, isOwner: ctx.user.role === "super_owner" || ctx.user.role === "owner" })),
   }),
   referrals: router({
     list: ownerProcedure.query(() => listReferrals()),

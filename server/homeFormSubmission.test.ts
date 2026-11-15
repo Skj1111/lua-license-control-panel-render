@@ -35,6 +35,7 @@ vi.mock("@/lib/trpc", () => {
         dashboard: { homeKeys: { invalidate: vi.fn() }, overview: { invalidate: vi.fn() }, bindings: { invalidate: vi.fn() }, users: { invalidate: vi.fn() }, audit: { invalidate: vi.fn() }, identity: { invalidate: vi.fn() } },
         referrals: { list: { invalidate: vi.fn() } },
       }),
+      auth: { register: { useMutation: mutation() } },
       dashboard: {
         identity: { useQuery: query({ role: "super_owner", accessStatus: "active", username: "Nexa", usernameChangeAvailable: true, usernameChangeAvailableAt: null, email: "owner@example.test" }) },
         overview: { useQuery: query({ totalKeys: 1, activeKeys: 1, revokedKeys: 0, totalDeviceBindings: 0 }) },
