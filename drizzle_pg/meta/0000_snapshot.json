@@ -1,5 +1,5 @@
 {
-  "id": "b5749260-d6da-4d8e-96d9-8635bd4c1045",
+  "id": "a88c446b-f2f6-4822-8ce1-acdbe8f6f659",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -941,7 +941,87 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.access_status": {
+      "name": "access_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "active",
+        "revoked"
+      ]
+    },
+    "public.announcement_display_mode": {
+      "name": "announcement_display_mode",
+      "schema": "public",
+      "values": [
+        "every_login",
+        "once_per_day"
+      ]
+    },
+    "public.announcement_text_size": {
+      "name": "announcement_text_size",
+      "schema": "public",
+      "values": [
+        "small",
+        "normal",
+        "large",
+        "festival_large"
+      ]
+    },
+    "public.legacy_license_status": {
+      "name": "legacy_license_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "banned"
+      ]
+    },
+    "public.license_status": {
+      "name": "license_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "expired",
+        "revoked",
+        "unused"
+      ]
+    },
+    "public.referral_role": {
+      "name": "referral_role",
+      "schema": "public",
+      "values": [
+        "owner",
+        "admin"
+      ]
+    },
+    "public.referral_status": {
+      "name": "referral_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "redeemed",
+        "revoked"
+      ]
+    },
+    "public.telegram_scope_status": {
+      "name": "telegram_scope_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "review"
+      ]
+    },
+    "public.user_role": {
+      "name": "user_role",
+      "schema": "public",
+      "values": [
+        "super_owner",
+        "owner",
+        "admin"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

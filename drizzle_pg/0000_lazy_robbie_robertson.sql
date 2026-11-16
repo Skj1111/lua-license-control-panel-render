@@ -1,3 +1,12 @@
+CREATE TYPE "public"."access_status" AS ENUM('pending', 'active', 'revoked');--> statement-breakpoint
+CREATE TYPE "public"."announcement_display_mode" AS ENUM('every_login', 'once_per_day');--> statement-breakpoint
+CREATE TYPE "public"."announcement_text_size" AS ENUM('small', 'normal', 'large', 'festival_large');--> statement-breakpoint
+CREATE TYPE "public"."legacy_license_status" AS ENUM('active', 'banned');--> statement-breakpoint
+CREATE TYPE "public"."license_status" AS ENUM('active', 'expired', 'revoked', 'unused');--> statement-breakpoint
+CREATE TYPE "public"."referral_role" AS ENUM('owner', 'admin');--> statement-breakpoint
+CREATE TYPE "public"."referral_status" AS ENUM('active', 'redeemed', 'revoked');--> statement-breakpoint
+CREATE TYPE "public"."telegram_scope_status" AS ENUM('active', 'review');--> statement-breakpoint
+CREATE TYPE "public"."user_role" AS ENUM('super_owner', 'owner', 'admin');--> statement-breakpoint
 CREATE TABLE "audit_logs" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"actorUserId" integer,

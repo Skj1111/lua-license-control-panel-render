@@ -1,14 +1,14 @@
 import { boolean, integer, pgEnum, pgTable, text, timestamp, varchar, serial } from "drizzle-orm/pg-core";
 
-const userRole = pgEnum("user_role", ["super_owner", "owner", "admin"]);
-const accessStatus = pgEnum("access_status", ["pending", "active", "revoked"]);
-const licenseStatus = pgEnum("license_status", ["active", "expired", "revoked", "unused"]);
-const legacyLicenseStatus = pgEnum("legacy_license_status", ["active", "banned"]);
-const referralRole = pgEnum("referral_role", ["owner", "admin"]);
-const referralStatus = pgEnum("referral_status", ["active", "redeemed", "revoked"]);
-const announcementDisplayMode = pgEnum("announcement_display_mode", ["every_login", "once_per_day"]);
-const announcementTextSize = pgEnum("announcement_text_size", ["small", "normal", "large", "festival_large"]);
-const telegramScopeStatus = pgEnum("telegram_scope_status", ["active", "review"]);
+export const userRole = pgEnum("user_role", ["super_owner", "owner", "admin"]);
+export const accessStatus = pgEnum("access_status", ["pending", "active", "revoked"]);
+export const licenseStatus = pgEnum("license_status", ["active", "expired", "revoked", "unused"]);
+export const legacyLicenseStatus = pgEnum("legacy_license_status", ["active", "banned"]);
+export const referralRole = pgEnum("referral_role", ["owner", "admin"]);
+export const referralStatus = pgEnum("referral_status", ["active", "redeemed", "revoked"]);
+export const announcementDisplayMode = pgEnum("announcement_display_mode", ["every_login", "once_per_day"]);
+export const announcementTextSize = pgEnum("announcement_text_size", ["small", "normal", "large", "festival_large"]);
+export const telegramScopeStatus = pgEnum("telegram_scope_status", ["active", "review"]);
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
