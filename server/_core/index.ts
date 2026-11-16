@@ -30,7 +30,11 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
-  await bootstrapLocalSuperOwner();
+  try {
+    await bootstrapLocalSuperOwner();
+  } catch (error) {
+    console.error("[Database] Super Owner bootstrap skipped:", error);
+  }
   const app = express();
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
