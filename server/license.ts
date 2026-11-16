@@ -254,8 +254,8 @@ export async function generateKey(durationMinutes: number, createdByUserId: numb
     }
   }
   const keyValue = exactCustomKey ?? generateLicenseKey(usernameToKeyPrefix(creatorUsername) ?? "LUA");
-  const inserted = await db.insert(licenses).values({ keyValue, expiresAt: null, activatedAt: null, durationMinutes, createdByUserId, status: "unused", maxDevices });
-  await recordAudit(createdByUserId, "key_created", "license", Number(inserted[0].insertId), keyValue, `durationMinutes=${durationMinutes};activation=pending;maxDevices=${maxDevices}`);
+  const inserted = await db.insert(licenses).values({ keyValue, expiresAt: null, activatedAt: null, durationMinutes, createdByUserId, status: "unused", maxDevices }).returning({ id: licenses.id });
+  await recordAudit(createdByUserId, "key_created", "license", inserted[0]?.id, keyValue, `durationMinutes=${durationMinutes};activation=pending;maxDevices=${maxDevices}`);
   return { keyValue, expiresAt: null, activatedAt: null, durationMinutes, maxDevices };
 }
 
@@ -298,8 +298,8 @@ export async function createReferral(role: "admin" | "owner", durationDays: numb
   if (!db) throw new Error("Database unavailable");
   const expiresAt = new Date(Date.now() + durationDays * 86400000);
   const code = `REF-${crypto.randomBytes(18).toString("base64url").toUpperCase()}`;
-  const inserted = await db.insert(referrals).values({ code, role, createdByUserId, expiresAt });
-  await recordAudit(createdByUserId, "referral_created", "referral", Number(inserted[0].insertId), undefined, `role=${role};expires=${expiresAt.toISOString()}`);
+  const inserted = await db.insert(referrals).values({ code, role, createdByUserId, expiresAt }).returning({ id: referrals.id });
+  await recordAudit(createdByUserId, "referral_created", "referral", inserted[0]?.id, undefined, `role=${role};expires=${expiresAt.toISOString()}`);
   return { code, role, expiresAt };
 }
 

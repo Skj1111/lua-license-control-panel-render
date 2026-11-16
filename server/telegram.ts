@@ -197,8 +197,8 @@ export async function redeemTelegramTicket(token: string, deviceId: string) {
   return db.transaction(async tx => {
     const ticket = (await tx.select().from(telegramTickets).where(and(eq(telegramTickets.tokenHash, hashTicket(token)), isNull(telegramTickets.redeemedAt), gt(telegramTickets.expiresAt, now))).limit(1))[0];
     if (!ticket || ticket.deviceHash !== hashDevice(normalizedDevice)) return { enabled: true as const, channelUrl: null, resolution: "ticket_unavailable" as const };
-    const [redeemResult] = await tx.update(telegramTickets).set({ redeemedAt: now }).where(and(eq(telegramTickets.id, ticket.id), isNull(telegramTickets.redeemedAt), eq(telegramTickets.deviceHash, ticket.deviceHash)));
-    if (redeemResult.affectedRows !== 1) return { enabled: true as const, channelUrl: null, resolution: "ticket_unavailable" as const };
+    const redeemResult = await tx.update(telegramTickets).set({ redeemedAt: now }).where(and(eq(telegramTickets.id, ticket.id), isNull(telegramTickets.redeemedAt), eq(telegramTickets.deviceHash, ticket.deviceHash)));
+    if (redeemResult.rowCount !== 1) return { enabled: true as const, channelUrl: null, resolution: "ticket_unavailable" as const };
     const license = (await tx.select({ createdByUserId: licenses.createdByUserId }).from(licenses).where(eq(licenses.id, ticket.licenseId)).limit(1))[0];
     if (!license?.createdByUserId) return { enabled: true as const, channelUrl: null, resolution: "creator_channel_missing" as const };
     const channel = (await tx.select({ channelUrl: telegramChannels.channelUrl, enabled: telegramChannels.enabled }).from(telegramChannels).where(eq(telegramChannels.userId, license.createdByUserId)).limit(1))[0];

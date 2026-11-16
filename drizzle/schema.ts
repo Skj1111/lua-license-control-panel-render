@@ -1,7 +1,17 @@
-import { boolean, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, integer, pgEnum, pgTable, text, timestamp, varchar, serial } from "drizzle-orm/pg-core";
 
-export const users = mysqlTable("users", {
-  id: int("id").autoincrement().primaryKey(),
+const userRole = pgEnum("user_role", ["super_owner", "owner", "admin"]);
+const accessStatus = pgEnum("access_status", ["pending", "active", "revoked"]);
+const licenseStatus = pgEnum("license_status", ["active", "expired", "revoked", "unused"]);
+const legacyLicenseStatus = pgEnum("legacy_license_status", ["active", "banned"]);
+const referralRole = pgEnum("referral_role", ["owner", "admin"]);
+const referralStatus = pgEnum("referral_status", ["active", "redeemed", "revoked"]);
+const announcementDisplayMode = pgEnum("announcement_display_mode", ["every_login", "once_per_day"]);
+const announcementTextSize = pgEnum("announcement_text_size", ["small", "normal", "large", "festival_large"]);
+const telegramScopeStatus = pgEnum("telegram_scope_status", ["active", "review"]);
+
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
@@ -9,11 +19,11 @@ export const users = mysqlTable("users", {
   passwordHash: varchar("passwordHash", { length: 256 }),
   usernameChangedAt: timestamp("usernameChangedAt"),
   loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["super_owner", "owner", "admin"]).default("admin").notNull(),
-  accessStatus: mysqlEnum("accessStatus", ["pending", "active", "revoked"]).default("pending").notNull(),
+  role: userRole("role").default("admin").notNull(),
+  accessStatus: accessStatus("accessStatus").default("pending").notNull(),
   accessExpiresAt: timestamp("accessExpiresAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
 });
 
@@ -21,54 +31,54 @@ export const users = mysqlTable("users", {
  * Canonical server-authoritative license registry.
  * `boundDeviceId` stores a keyed SHA-256 hash, never the raw client device ID.
  */
-export const licenses = mysqlTable("licenses", {
-  id: int("id").autoincrement().primaryKey(),
+export const licenses = pgTable("licenses", {
+  id: serial("id").primaryKey(),
   keyValue: varchar("license_key", { length: 128 }).notNull().unique(),
-  status: mysqlEnum("status", ["active", "expired", "revoked", "unused"]).default("unused").notNull(),
+  status: licenseStatus("status").default("unused").notNull(),
   // Existing keys retain their stored expiry. Newly created activation-duration keys
   // receive an expiry only after their first successful device binding.
   expiresAt: timestamp("expires_at"),
   activatedAt: timestamp("activated_at"),
-  durationMinutes: int("duration_minutes"),
-  maxDevices: int("max_devices").notNull().default(1),
+  durationMinutes: integer("duration_minutes"),
+  maxDevices: integer("max_devices").notNull().default(1),
   boundDeviceId: varchar("bound_device_id", { length: 128 }),
-  createdByUserId: int("created_by_user_id"),
+  createdByUserId: integer("created_by_user_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 /**
  * Legacy registry retained only for a non-destructive, one-time data migration.
  * Application code reads and writes exclusively through `licenses`.
  */
-export const legacyLicenseKeys = mysqlTable("license_keys", {
-  id: int("id").autoincrement().primaryKey(),
+export const legacyLicenseKeys = pgTable("license_keys", {
+  id: serial("id").primaryKey(),
   keyValue: varchar("keyValue", { length: 128 }).notNull().unique(),
-  status: mysqlEnum("status", ["active", "banned"]).default("active").notNull(),
+  status: legacyLicenseStatus("status").default("active").notNull(),
   expiresAt: timestamp("expiresAt").notNull(),
-  maxDevices: int("maxDevices").notNull().default(1),
-  createdByUserId: int("createdByUserId"),
+  maxDevices: integer("maxDevices").notNull().default(1),
+  createdByUserId: integer("createdByUserId"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
-export const referrals = mysqlTable("referrals", {
-  id: int("id").autoincrement().primaryKey(),
+export const referrals = pgTable("referrals", {
+  id: serial("id").primaryKey(),
   code: varchar("code", { length: 96 }).notNull().unique(),
-  role: mysqlEnum("role", ["owner", "admin"]).notNull(),
-  createdByUserId: int("createdByUserId").notNull(),
-  redeemedByUserId: int("redeemedByUserId"),
-  status: mysqlEnum("status", ["active", "redeemed", "revoked"]).default("active").notNull(),
+  role: referralRole("role").notNull(),
+  createdByUserId: integer("createdByUserId").notNull(),
+  redeemedByUserId: integer("redeemedByUserId"),
+  status: referralStatus("status").default("active").notNull(),
   expiresAt: timestamp("expiresAt").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   redeemedAt: timestamp("redeemedAt"),
 });
 
-export const auditLogs = mysqlTable("audit_logs", {
-  id: int("id").autoincrement().primaryKey(),
-  actorUserId: int("actorUserId"),
+export const auditLogs = pgTable("audit_logs", {
+  id: serial("id").primaryKey(),
+  actorUserId: integer("actorUserId"),
   action: varchar("action", { length: 64 }).notNull(),
   entityType: varchar("entityType", { length: 32 }).notNull(),
-  entityId: int("entityId"),
+  entityId: integer("entityId"),
   keyPreview: varchar("keyPreview", { length: 64 }),
   details: text("details"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -78,12 +88,12 @@ export const auditLogs = mysqlTable("audit_logs", {
  * Server-authoritative list of distinct hashed device bindings. `boundDeviceId` remains
  * the first bound device for backwards compatibility; this table enforces maxDevices.
  */
-export const deviceBindings = mysqlTable("device_bindings", {
-  id: int("id").autoincrement().primaryKey(),
-  licenseKeyId: int("licenseKeyId").notNull(),
+export const deviceBindings = pgTable("device_bindings", {
+  id: serial("id").primaryKey(),
+  licenseKeyId: integer("licenseKeyId").notNull(),
   deviceHash: varchar("deviceHash", { length: 128 }).notNull().unique(),
   firstSeenAt: timestamp("firstSeenAt").defaultNow().notNull(),
-  lastSeenAt: timestamp("lastSeenAt").defaultNow().onUpdateNow().notNull(),
+  lastSeenAt: timestamp("lastSeenAt").defaultNow().notNull(),
 });
 
 export type User = typeof users.$inferSelect;
@@ -95,19 +105,19 @@ export type DeviceBinding = typeof deviceBindings.$inferSelect;
  * Singleton, presentation-only announcement controlled by the Super Owner.
  * `id = 1` is the only supported row; no license decision reads this table.
  */
-export const systemAnnouncements = mysqlTable("system_announcements", {
-  id: int("id").primaryKey(),
-  version: int("version").notNull().default(1),
+export const systemAnnouncements = pgTable("system_announcements", {
+  id: integer("id").primaryKey(),
+  version: integer("version").notNull().default(1),
   enabled: boolean("enabled").notNull().default(false),
   title: varchar("title", { length: 80 }).notNull().default("SYSTEM ANNOUNCEMENT"),
   message: varchar("message", { length: 300 }).notNull().default(""),
   startAt: timestamp("start_at"),
   endAt: timestamp("end_at"),
-  displayMode: mysqlEnum("display_mode", ["every_login", "once_per_day"]).notNull().default("every_login"),
-  textSize: mysqlEnum("text_size", ["small", "normal", "large", "festival_large"]).notNull().default("normal"),
-  updatedByUserId: int("updated_by_user_id"),
+  displayMode: announcementDisplayMode("display_mode").notNull().default("every_login"),
+  textSize: announcementTextSize("text_size").notNull().default("normal"),
+  updatedByUserId: integer("updated_by_user_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export type SystemAnnouncement = typeof systemAnnouncements.$inferSelect;
@@ -117,17 +127,17 @@ export type SystemAnnouncement = typeof systemAnnouncements.$inferSelect;
  * This state is intentionally separate from System Announcement and never participates
  * in license validation or device-binding decisions.
  */
-export const serverMaintenance = mysqlTable("server_maintenance", {
-  id: int("id").primaryKey(),
-  version: int("version").notNull().default(1),
+export const serverMaintenance = pgTable("server_maintenance", {
+  id: integer("id").primaryKey(),
+  version: integer("version").notNull().default(1),
   enabled: boolean("enabled").notNull().default(false),
   title: varchar("title", { length: 80 }).notNull().default("SERVER MAINTENANCE"),
   message: varchar("message", { length: 300 }).notNull().default(""),
   startAt: timestamp("start_at"),
   endAt: timestamp("end_at"),
-  updatedByUserId: int("updated_by_user_id"),
+  updatedByUserId: integer("updated_by_user_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export type ServerMaintenance = typeof serverMaintenance.$inferSelect;
@@ -136,45 +146,45 @@ export type ServerMaintenance = typeof serverMaintenance.$inferSelect;
  * Fully isolated, removable Telegram extension tables.
  * These tables are presentation/navigation metadata only and are never read by license validation.
  */
-export const telegramSettings = mysqlTable("telegram_settings", {
-  id: int("id").primaryKey(),
+export const telegramSettings = pgTable("telegram_settings", {
+  id: integer("id").primaryKey(),
   enabled: boolean("enabled").notNull().default(false),
-  updatedByUserId: int("updated_by_user_id"),
+  updatedByUserId: integer("updated_by_user_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const telegramChannels = mysqlTable("telegram_channels", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id").notNull().unique(),
+export const telegramChannels = pgTable("telegram_channels", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().unique(),
   channelUrl: varchar("channel_url", { length: 256 }).notNull(),
   enabled: boolean("enabled").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const telegramAccountScopes = mysqlTable("telegram_account_scopes", {
-  id: int("id").autoincrement().primaryKey(),
-  ownerUserId: int("owner_user_id").notNull(),
-  accountUserId: int("account_user_id").notNull().unique(),
-  sourceReferralId: int("source_referral_id"),
-  status: mysqlEnum("status", ["active", "review"]).notNull().default("active"),
+export const telegramAccountScopes = pgTable("telegram_account_scopes", {
+  id: serial("id").primaryKey(),
+  ownerUserId: integer("owner_user_id").notNull(),
+  accountUserId: integer("account_user_id").notNull().unique(),
+  sourceReferralId: integer("source_referral_id"),
+  status: telegramScopeStatus("status").notNull().default("active"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const telegramKeyMappings = mysqlTable("telegram_key_mappings", {
-  id: int("id").autoincrement().primaryKey(),
-  licenseId: int("license_id").notNull().unique(),
-  accountUserId: int("account_user_id").notNull(),
+export const telegramKeyMappings = pgTable("telegram_key_mappings", {
+  id: serial("id").primaryKey(),
+  licenseId: integer("license_id").notNull().unique(),
+  accountUserId: integer("account_user_id").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const telegramTickets = mysqlTable("telegram_tickets", {
-  id: int("id").autoincrement().primaryKey(),
+export const telegramTickets = pgTable("telegram_tickets", {
+  id: serial("id").primaryKey(),
   tokenHash: varchar("token_hash", { length: 128 }).notNull().unique(),
-  licenseId: int("license_id").notNull(),
+  licenseId: integer("license_id").notNull(),
   deviceHash: varchar("device_hash", { length: 128 }).notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   redeemedAt: timestamp("redeemed_at"),
