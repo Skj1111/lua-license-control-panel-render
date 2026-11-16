@@ -7,6 +7,7 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { registerLicenseRoutes } from "../licenseRoutes";
+import { bootstrapLocalSuperOwner } from "../db";
 import { serveStatic, setupVite } from "./vite";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -29,6 +30,7 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  await bootstrapLocalSuperOwner();
   const app = express();
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads

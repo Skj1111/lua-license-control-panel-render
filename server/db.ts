@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 import crypto from "node:crypto";
 import { InsertUser, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { hashPassword, LOCAL_PASSWORD_MIN_LENGTH } from "./passwordAuth";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -98,6 +99,25 @@ export async function getUserByUsername(username: string) {
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
   return result.length > 0 ? result[0] : undefined;
+}
+
+export async function bootstrapLocalSuperOwner() {
+  const username = process.env.BOOTSTRAP_OWNER_USERNAME?.trim();
+  const password = process.env.BOOTSTRAP_OWNER_PASSWORD;
+  if (!username && !password) return false;
+  if (!username || !password) throw new Error("Both BOOTSTRAP_OWNER_USERNAME and BOOTSTRAP_OWNER_PASSWORD are required");
+  if (password.length < LOCAL_PASSWORD_MIN_LENGTH) throw new Error("BOOTSTRAP_OWNER_PASSWORD is too short");
+  const db = await getDb();
+  if (!db) throw new Error("Database unavailable for Super Owner bootstrap");
+  const passwordHash = hashPassword(password);
+  const existing = await db.select({ id: users.id }).from(users).where(eq(users.username, username)).limit(1);
+  if (existing.length > 0) {
+    await db.update(users).set({ passwordHash, role: "super_owner", accessStatus: "active", loginMethod: "password", name: username, updatedAt: new Date() }).where(eq(users.id, existing[0].id));
+  } else {
+    await db.insert(users).values({ openId: `local_${crypto.randomUUID()}`, name: username, username, passwordHash, loginMethod: "password", role: "super_owner", accessStatus: "active", lastSignedIn: new Date() });
+  }
+  console.log(`[Database] Bootstrapped Super Owner account: ${username}`);
+  return true;
 }
 
 export async function createLocalUser(username: string, passwordHash: string) {

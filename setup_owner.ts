@@ -19,7 +19,7 @@ async function setupOwner() {
     console.log("User already exists, updating...");
     await db.update(users).set({
       passwordHash,
-      role: 'owner',
+      role: 'super_owner',
       accessStatus: 'active'
     }).where((await import('drizzle-orm')).eq(users.username, username));
   } else {
@@ -30,7 +30,7 @@ async function setupOwner() {
       username: username,
       passwordHash: passwordHash,
       loginMethod: "password",
-      role: "owner",
+      role: "super_owner",
       accessStatus: "active",
       lastSignedIn: new Date(),
     });
