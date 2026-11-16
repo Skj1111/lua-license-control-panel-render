@@ -2,11 +2,12 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { LayoutDashboard, LoaderCircle, LogOut, ShieldCheck } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, logout } = useAuth();
+  const [location] = useLocation();
   const identity = trpc.dashboard.identity.useQuery(undefined, { enabled: Boolean(user) });
   if (loading) return (
     <div className="cyber-grid min-h-screen bg-[#07070b] px-5 text-slate-100">
@@ -26,6 +27,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
     </div>
   );
+  // The root page owns the local username/password login form. Keep it
+  // visible instead of hiding it behind the authenticated shell.
+  if (!user && location === "/") return <>{children}</>;
   if (!user) return <div className="min-h-screen bg-[#07070b] grid place-items-center p-6"><div className="hud-panel max-w-md w-full p-8 text-center"><p className="eyebrow">AUTH GATE // 01</p><h1 className="neon-heading text-3xl mt-3">ACCESS REQUIRED</h1><p className="mt-4 text-slate-400">Return to the panel login screen and sign in with your local username and password.</p><Link href="/" className="cyber-button mt-7 inline-flex w-full items-center justify-center">RETURN TO LOGIN</Link></div></div>;
   const isOwner = identity.data?.role === "super_owner" || identity.data?.role === "owner" || user.role === "owner" || user.openId === import.meta.env.VITE_OWNER_OPEN_ID;
   const isSuperOwner = identity.data?.role === "super_owner";

@@ -31,7 +31,7 @@ const toDateTimeLocal = (value: Date | string) => {
 const licenseStatusClass = (status: "active" | "expired" | "revoked" | "unused") => ({ active: "status-active", expired: "status-expired", revoked: "status-revoked", unused: "status-muted" })[status];
 
 export default function Home() {
-  const { user, logout, login, isLoggingIn } = useAuth();
+  const { user, logout, login, isLoggingIn, loginError } = useAuth();
   const [isRegistering, setIsRegistering] = useState(false);
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const registerMutation = trpc.auth.register.useMutation({
@@ -43,7 +43,7 @@ export default function Home() {
   });
 
   const apiOrigin = typeof window === "undefined" ? "https://YOUR-PANEL-DOMAIN" : window.location.origin;
-  const identity = trpc.dashboard.identity.useQuery();
+  const identity = trpc.dashboard.identity.useQuery(undefined, { enabled: Boolean(user), retry: false });
   const isSuperOwner = identity.data?.role === "super_owner";
   const isOwner = isSuperOwner || identity.data?.role === "owner";
   const isActive = identity.data?.accessStatus === "active";
@@ -93,6 +93,25 @@ export default function Home() {
   useEffect(() => {
     if (isActive && identity.data && !identity.data.username) setUsernameDialogOpen(true);
   }, [identity.data, isActive]);
+  useEffect(() => {
+    if (loginError) toast.error(loginError.message || "Login failed. Check your username and password.");
+  }, [loginError]);
+  const submitAuth = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isRegistering) {
+      registerMutation.mutate(credentials);
+      return;
+    }
+    if (!credentials.username.trim() || !credentials.password) {
+      toast.error("Enter both username and password.");
+      return;
+    }
+    try {
+      await login({ username: credentials.username.trim(), password: credentials.password });
+    } catch {
+      // The mutation error is surfaced through loginError and the effect above.
+    }
+  };
 
   const makeKey = () => {
     const validation = validateLicenseGenerationInput({ durationAmount, maxDevices, customEnabled, customPrefix });
@@ -136,16 +155,16 @@ export default function Home() {
       <Card className="hud-panel w-full max-w-md border-cyan-300/20 p-8 shadow-2xl shadow-cyan-950/20">
         <div className="brand-mark mb-6">LX</div>
         <h1 className="neon-heading text-3xl mt-3">{isRegistering ? "CREATE ACCOUNT" : "AUTHENTICATION BUS"}</h1>
-        <div className="mt-8 space-y-4">
+        <form className="mt-8 space-y-4" onSubmit={submitAuth}>
           <Input placeholder="Username" value={credentials.username} onChange={e => setCredentials({...credentials, username: e.target.value})} className="cyber-input" />
           <Input type="password" placeholder="Password" value={credentials.password} onChange={e => setCredentials({...credentials, password: e.target.value})} className="cyber-input" />
-          <Button className="cyber-button w-full h-12 mt-4" disabled={isLoggingIn || registerMutation.isPending} onClick={() => isRegistering ? registerMutation.mutate(credentials) : login(credentials)}>
+          <Button type="submit" className="cyber-button w-full h-12 mt-4" disabled={isLoggingIn || registerMutation.isPending}>
             {isLoggingIn || registerMutation.isPending ? "PROCESSING…" : isRegistering ? "REGISTER" : "LOGIN"}
           </Button>
-          <Button variant="ghost" className="w-full text-slate-500 hover:text-cyan-300 uppercase tracking-[.1em] text-xs" onClick={() => setIsRegistering(!isRegistering)}>
+          <Button type="button" variant="ghost" className="w-full text-slate-500 hover:text-cyan-300 uppercase tracking-[.1em] text-xs" onClick={() => setIsRegistering(!isRegistering)}>
             {isRegistering ? "Back to login" : "Need an account? Register"}
           </Button>
-        </div>
+        </form>
       </Card>
     </div>
   );
