@@ -2,8 +2,33 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link, useLocation } from "wouter";
 import { Bell, FileClock, KeyRound, LayoutDashboard, LoaderCircle, LogOut, Megaphone, Menu, Radio, ShieldCheck, SlidersHorizontal, Users, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
+
+function ParticleField() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const points = Array.from({ length: window.innerWidth < 700 ? 36 : 72 }, (_, index) => ({
+      x: Math.random(), y: Math.random(), vx: (Math.random() - 0.5) * 0.00018, vy: (Math.random() - 0.5) * 0.00018,
+      radius: 0.7 + Math.random() * 1.7, phase: index * 0.4,
+    }));
+    let frame = 0;
+    const resize = () => { const ratio = Math.min(window.devicePixelRatio || 1, 1.5); canvas.width = window.innerWidth * ratio; canvas.height = window.innerHeight * ratio; canvas.style.width = `${window.innerWidth}px`; canvas.style.height = `${window.innerHeight}px`; context.setTransform(ratio, 0, 0, ratio, 0, 0); };
+    const draw = (time: number) => {
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      points.forEach(point => { point.x += point.vx; point.y += point.vy; if (point.x < 0 || point.x > 1) point.vx *= -1; if (point.y < 0 || point.y > 1) point.vy *= -1; const alpha = 0.16 + Math.sin(time * 0.001 + point.phase) * 0.06; context.beginPath(); context.fillStyle = `rgba(95, 226, 255, ${alpha})`; context.arc(point.x * window.innerWidth, point.y * window.innerHeight, point.radius, 0, Math.PI * 2); context.fill(); });
+      if (!reduced) frame = requestAnimationFrame(draw);
+    };
+    resize(); window.addEventListener("resize", resize); draw(0);
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("resize", resize); };
+  }, []);
+  return <canvas ref={canvasRef} className="particle-field" aria-hidden="true" />;
+}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, logout } = useAuth();
@@ -32,7 +57,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ].filter(item => (!item.ownerOnly || isOwner) && (!item.superOnly || isSuperOwner));
   const Nav = ({ mobile = false }: { mobile?: boolean }) => <nav className={mobile ? "grid gap-1" : "space-y-1"} aria-label="Primary navigation">{navItems.map(({ href, label, icon: Icon, active }) => <Link key={href} href={href} onClick={() => mobile && setMobileOpen(false)} className={active ? "nav-active" : "nav-item"}><Icon className="h-4 w-4 shrink-0" /><span>{label}</span>{active && <span className="ml-auto nav-live-dot" />}</Link>)}</nav>;
 
-  return <div className="panel-shell min-h-screen text-slate-100 cyber-grid">
+  return <div className="panel-shell min-h-screen text-slate-100 cyber-grid"><ParticleField />
     <aside className="command-sidebar fixed inset-y-0 left-0 z-30 hidden w-[276px] border-r border-cyan-200/15 p-5 lg:block"><div className="flex items-center gap-3 border-b border-cyan-200/10 pb-6"><div className="brand-mark">NX</div><div><p className="font-display text-lg tracking-[.2em] text-cyan-100">NEXA//OS</p><p className="text-[10px] tracking-[.24em] text-fuchsia-200">LICENSE CONTROL</p></div></div><div className="mt-7 mb-3 flex items-center justify-between"><p className="eyebrow">NAVIGATION</p><span className="status-pulse"><Radio className="h-3 w-3" /> LIVE</span></div><Nav /><div className="absolute bottom-5 left-5 right-5 hud-divider pt-4"><div className="mb-4 flex items-center gap-2 text-[10px] uppercase tracking-[.16em] text-emerald-300"><span className="live-dot" /> API network online</div><div className="flex items-center gap-3"><Avatar className="h-9 w-9 border border-cyan-200/25"><AvatarFallback className="bg-cyan-300/10 text-cyan-100">{displayName?.[0] ?? "U"}</AvatarFallback></Avatar><div className="min-w-0"><p className="truncate text-sm text-cyan-50">{displayName}</p><p className="truncate text-[10px] text-slate-500">{displayEmail}</p><p className="text-[10px] uppercase tracking-[.18em] text-violet-200">{roleLabel}</p></div><button className="ml-auto text-slate-500 hover:text-cyan-100" onClick={logout} aria-label="Sign out"><LogOut className="h-4 w-4" /></button></div><button className="mt-3 w-full text-left text-[10px] uppercase tracking-[.16em] text-cyan-300 hover:text-white" onClick={switchAccount}>Sign in with another account</button></div></aside>
     {mobileOpen && <div className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden" onClick={() => setMobileOpen(false)}><aside className="mobile-drawer h-full w-[min(86vw,340px)] border-r border-cyan-200/20 bg-[#080d18] p-5" onClick={event => event.stopPropagation()}><div className="flex items-center justify-between border-b border-cyan-200/10 pb-6"><div className="flex items-center gap-3"><div className="brand-mark">NX</div><div><p className="font-display text-lg tracking-[.2em] text-cyan-100">NEXA//OS</p><p className="text-[10px] tracking-[.24em] text-fuchsia-200">LICENSE CONTROL</p></div></div><button onClick={() => setMobileOpen(false)} aria-label="Close navigation"><X className="h-5 w-5 text-slate-400" /></button></div><p className="eyebrow mt-7 mb-3">NAVIGATION</p><Nav mobile /></aside></div>}
     <main className="min-h-screen lg:pl-[276px]"><div className="mx-auto max-w-[1680px] p-4 sm:p-6 lg:p-8"><header className="command-topbar mb-7 flex items-center justify-between gap-4 rounded-2xl border border-cyan-200/15 bg-slate-950/50 px-4 py-3 backdrop-blur-xl sm:px-5"><div className="flex items-center gap-3"><button className="icon-button lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Menu className="h-5 w-5" /></button><div><p className="eyebrow">NEXA COMMAND OS / SECURE CHANNEL</p><p className="hidden text-xs text-slate-400 sm:block">License infrastructure telemetry and access operations</p></div></div><div className="flex items-center gap-3"><span className="hidden items-center gap-2 text-[10px] uppercase tracking-[.16em] text-emerald-300 sm:flex"><span className="live-dot" /> System online</span><button className="icon-button" aria-label="Notifications"><Bell className="h-4 w-4" /></button><div className="hidden h-6 w-px bg-cyan-200/15 sm:block" /><span className="text-xs text-cyan-100">{displayName}</span></div></header>{children}</div></main>
