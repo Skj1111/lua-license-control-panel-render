@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050816"><title>NEXA License Control Panel</title>
+<style>
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{--bg:#050816;--p:rgba(14,22,48,.55);--bd:rgba(120,180,255,.18);--tx:#e6f0ff;--mu:#8fa3c8;--c1:#00e5ff;--c2:#3b82f6;--c3:#a855f7;--ok:#22ff9a;--bad:#ff4d6d;--warn:#ffc400}
+*{box-sizing:border-box;margin:0}html,body{height:100%}
+body{background:radial-gradient(ellipse at 20% 0,#0b1440,transparent 60%),radial-gradient(ellipse at 90% 100%,#2a0b4a,transparent 55%),var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.app{position:relative;z-index:1;display:flex;height:100%;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.glass{background:var(--p);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--bd);border-radius:16px;box-shadow:0 10px 40px #0008,inset 0 1px 0 #fff2}
+.neon{position:relative}.neon::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--a),var(--c1),var(--c3),var(--c2),var(--c1));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 6s linear infinite;pointer-events:none;opacity:.8}
+@keyframes spin{to{--a:360deg}}@keyframes fl{50%{transform:translateY(-6px)}}@keyframes pl{50%{box-shadow:0 0 22px var(--c1)}}
+aside{width:230px;margin:10px;padding:12px;display:flex;flex-direction:column;gap:4px;transition:width .3s;flex:none;overflow:auto}
+aside.col{width:68px}aside.col .lb,aside.col .brand span{display:none}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:3px;color:var(--c1);padding:6px;text-shadow:0 0 12px var(--c1)}
+nav button{all:unset;box-sizing:border-box;display:flex;gap:12px;align-items:center;width:100%;padding:11px 12px;border-radius:12px;cursor:pointer;color:var(--mu);transition:.2s}
+nav button svg{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;filter:drop-shadow(0 0 4px currentColor)}
+nav button:hover{color:var(--tx);background:#fff1}nav button.on{color:var(--c1);background:linear-gradient(90deg,#00e5ff25,transparent);box-shadow:inset 3px 0 var(--c1)}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;padding:10px 10px 10px 0}
+header{display:flex;gap:10px;align-items:center;padding:8px 12px;margin-bottom:10px}
+header input{flex:1;min-width:0}
+input,select,textarea{background:#0a1030aa;border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:10px 12px;font:inherit;width:100%;outline:none}
+input:focus,select:focus{border-color:var(--c1);box-shadow:0 0 0 2px #00e5ff30}
+.btn{background:linear-gradient(135deg,var(--c2),var(--c3));border:0;color:#fff;padding:9px 14px;border-radius:10px;cursor:pointer;font:600 13px inherit;box-shadow:0 0 14px #3b82f655;transition:.2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 0 22px var(--c1)}.btn.g{background:#ffffff14;box-shadow:none;border:1px solid var(--bd)}.btn.d{background:linear-gradient(135deg,#ff4d6d,#c026d3)}.btn:disabled{opacity:.5;cursor:wait}
+.ib{position:relative;width:38px;height:38px;flex:none;padding:0;display:grid;place-items:center}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--mu);display:inline-block;margin-right:6px}.dot.ok{background:var(--ok);box-shadow:0 0 10px var(--ok)}.dot.bad{background:var(--bad);box-shadow:0 0 10px var(--bad)}.dot.warn{background:var(--warn)}
+#badge{position:absolute;top:-4px;right:-4px;background:var(--bad);border-radius:9px;font-size:10px;padding:0 5px;display:none}
+#view{flex:1;overflow:auto;padding:4px;position:relative;perspective:1200px;-webkit-overflow-scrolling:touch}
+h2{font-size:20px;margin:4px 0 12px;text-shadow:0 0 14px #00e5ff66}h3{font-size:14px;color:var(--mu);font-weight:600;margin-bottom:8px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-bottom:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{padding:16px;transform-style:preserve-3d;transition:transform .15s;will-change:transform;position:relative;overflow:hidden}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,0),#ffffff26,transparent 55%);opacity:0;transition:.2s;pointer-events:none}.card:hover::after{opacity:1}
+.stat .n{font-size:32px;font-weight:800;color:var(--c1);text-shadow:0 0 18px var(--c1)}.stat .ic{float:right;width:44px;height:44px;padding:9px;border-radius:12px;background:#00e5ff18;stroke:var(--c1);fill:none;stroke-width:1.7;animation:fl 4s ease-in-out infinite;transform:translateZ(30px)}
+.bar{height:5px;border-radius:5px;background:#fff1;margin-top:10px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c1),var(--c3));box-shadow:0 0 10px var(--c1);transition:width 1s}
+.act{cursor:pointer}.act b{display:block;font-size:15px;margin-bottom:2px}.act span{color:var(--mu);font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}th{color:var(--mu);text-align:left;font-weight:600;padding:8px;border-bottom:1px solid var(--bd);white-space:nowrap}td{padding:9px 8px;border-bottom:1px solid #ffffff0d;white-space:nowrap}tr:hover td{background:#00e5ff0a}
+.tw{overflow-x:auto}.pill{padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid}.pill.active{color:var(--ok);border-color:var(--ok)}.pill.expired,.pill.revoked{color:var(--bad);border-color:var(--bad)}.pill.unused{color:var(--warn);border-color:var(--warn)}
+.mono{font-family:ui-monospace,Menlo,monospace}.mu{color:var(--mu)}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ev{padding:8px 0;border-bottom:1px solid #ffffff0d;font-size:13px}.ev.new{animation:flash 1.5s}@keyframes flash{from{background:#00e5ff30}}
+#globe{width:100%;height:230px;display:block}.chartbox{height:280px}
+#toasts{position:fixed;right:12px;top:calc(12px + env(safe-area-inset-top));z-index:99;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 24px)}
+.toast{padding:12px 16px;border-radius:12px;border:1px solid;background:#0b1233ee;backdrop-filter:blur(10px);animation:in .3s}.toast.ok{border-color:var(--ok)}.toast.err{border-color:var(--bad)}.toast.inf{border-color:var(--c1)}@keyframes in{from{transform:translateX(40px);opacity:0}}
+.ov{position:fixed;inset:0;background:#000a;z-index:50;display:grid;place-items:center;padding:14px}.mod{width:min(460px,100%);padding:20px;max-height:90vh;overflow:auto}
+label{display:block;margin:10px 0 4px;color:var(--mu);font-size:12px}
+#load{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;text-align:center}
+.ring{width:70px;height:70px;border-radius:50%;border:3px solid transparent;border-top-color:var(--c1);border-right-color:var(--c3);animation:rot 1s linear infinite;margin:0 auto 16px;box-shadow:0 0 25px #00e5ff55}@keyframes rot{to{transform:rotate(360deg)}}
+#login{position:fixed;inset:0;z-index:60;display:none;place-items:center;padding:14px}
+.err{color:var(--bad);font-size:13px;margin-top:8px}
+@media(max-width:760px){aside{position:fixed;z-index:20;left:0;top:0;bottom:0;margin:0;border-radius:0 16px 16px 0;transform:translateX(-105%);width:230px!important;transition:transform .3s}aside.open{transform:none}aside .lb,aside .brand span{display:inline!important}.main{padding:6px}.hide-m{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body>
+<canvas id="bg"></canvas>
+<div id="load"><div><div class="ring"></div><div class="brand" style="justify-content:center">NEXA</div><div class="mu" id="lt">Initializing secure session…</div></div></div>
+<div id="login"><form class="glass neon mod" id="lf"><div class="brand" style="font-size:22px">NEXA</div><div class="mu">Sign in to the license control panel</div>
+<label>Username</label><input id="lu" autocomplete="username" required><label>Password</label><input id="lp" type="password" autocomplete="current-password" required>
+<div class="err" id="le"></div><button class="btn" style="width:100%;margin-top:14px" id="lb">Sign in</button></form></div>
+<div class="app" id="app" style="visibility:hidden">
+<aside class="glass neon" id="sb"><div class="brand"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 8v8M8 10l8 4"/></svg><span>NEXA</span></div><nav id="nav"></nav></aside>
+<div class="main"><header class="glass"><button class="btn g ib" id="tg" aria-label="Menu">☰</button>
+<input id="gs" placeholder="Search licenses, users, logs…" aria-label="Global search">
+<span class="hide-m mu" id="conn"><i class="dot"></i>…</span>
+<button class="btn g ib" id="bell" aria-label="Notifications"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg><b id="badge"></b></button>
+<button class="btn g" id="prof">…</button></header>
+<div id="view"></div></div></div><div id="toasts"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+"use strict";
+/* ===== Config: same-origin by default. Put this folder in client/public/nexa to serve from the panel server. ===== */
+const API=(window.NEXA_API_BASE||'').replace(/\/$/,'');
+const $=(s,r=document)=>r.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>d?new Date(d).toLocaleString():'—';
+/* ===== API layer (tRPC + superjson, cookie session) ===== */
+class ApiErr extends Error{constructor(m,c){super(m);this.code=c}}
+async function trpc(path,input,mut){
+ const o={credentials:'include',headers:{'content-type':'application/json'}};let u=API+'/api/trpc/'+path;
+ if(mut){o.method='POST';o.body=JSON.stringify({json:input??null})}else if(input!==undefined)u+='?input='+encodeURIComponent(JSON.stringify({json:input}));
+ let r,j;try{r=await fetch(u,o)}catch{throw new ApiErr('Server unreachable','NETWORK')}
+ try{j=await r.json()}catch{throw new ApiErr('Unexpected server response ('+r.status+')','BAD')}
+ if(j.error){let m=j.error.json?.message||'Request failed';try{const a=JSON.parse(m);if(Array.isArray(a))m=a.map(x=>x.message).join('; ')}catch{}
+  throw new ApiErr(m,j.error.json?.data?.code)}
+ return j.result.data.json}
+const q=(p,i)=>trpc(p,i,false),mu=(p,i)=>trpc(p,i,true);
+/* ===== State ===== */
+const S={user:null,keys:[],users:null,audit:null,auditSeen:new Set(),newEv:0,range:'30D',page:'dashboard',online:navigator.onLine,latency:null,health:{}};
+const isOwner=()=>['super_owner','owner'].includes(S.user?.role);
+/* ===== UI helpers ===== */
+function toast(m,t='inf'){const e=document.createElement('div');e.className='toast '+t;e.textContent=m;$('#toasts').append(e);setTimeout(()=>e.remove(),t==='err'?7000:4000)}
+function modal(title,html,onSubmit,okText='Confirm',danger){return new Promise(res=>{
+ const o=document.createElement('div');o.className='ov';o.innerHTML=`<form class="glass neon mod"><h2>${esc(title)}</h2>${html}<div class="err" id="me"></div><div class="row" style="justify-content:flex-end;margin-top:16px"><button type="button" class="btn g" id="mc">Cancel</button><button class="btn ${danger?'d':''}" id="mo">${esc(okText)}</button></div></form>`;
+ document.body.append(o);gsap.from(o.firstChild,{scale:.92,opacity:0,duration:.25});const close=v=>{o.remove();res(v)};
+ $('#mc',o).onclick=()=>close(false);o.onmousedown=e=>{if(e.target===o)close(false)};
+ $('form',o).onsubmit=async e=>{e.preventDefault();const b=$('#mo',o);b.disabled=true;b.textContent='Waiting for server…';
+  try{const r=await (onSubmit?onSubmit(o):true);close(r??true)}catch(x){$('#me',o).textContent=x.message;b.disabled=false;b.textContent=okText}}})}
+const confirmBox=(t,ok='Confirm')=>modal('Please confirm',`<p>${esc(t)}</p>`,null,ok,true);
+const icons={dashboard:'M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z',users:'M16 11a4 4 0 1 0-8 0M4 21a8 8 0 0 1 16 0',licenses:'M3 7h18v10H3zM7 11h4M7 14h8',devices:'M7 2h10v20H7zM11 18h2',security:'M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z',analytics:'M3 20h18M6 16V9M11 16V5M16 16v-6M21 16V12',logs:'M5 3h14v18H5zM8 8h8M8 12h8M8 16h5',settings:'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v3M12 19v3M2 12h3M19 12h3',theme:'M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z',about:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v6M12 7.5v.5'};
+const ic=(k,c='')=>`<svg class="${c}" viewBox="0 0 24 24"><path d="${icons[k]}"/></svg>`;
+const pages=[['dashboard','Dashboard'],['users','User Management'],['licenses','License Manager'],['devices','Devices'],['security','Security'],['analytics','Analytics'],['logs','Logs'],['settings','Settings'],['theme','Theme'],['about','About']];
+$('#nav').innerHTML=pages.map(([k,l])=>`<button data-p="${k}">${ic(k)}<span class="lb">${l}</span></button>`).join('');
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b){go(b.dataset.p);$('#sb').classList.remove('open')}};
+$('#tg').onclick=()=>{const s=$('#sb');innerWidth<=760?s.classList.toggle('open'):s.classList.toggle('col')};
+/* ===== Data loading ===== */
+async function loadKeys(){S.keys=await q('dashboard.keys')}
+async function loadUsers(){if(!isOwner())return S.users=null;S.users=await q('dashboard.users')}
+async function loadAudit(live){if(!isOwner())return;const a=await q('dashboard.audit');
+ if(live&&S.audit){const n=a.filter(x=>!S.auditSeen.has(x.id));if(n.length){S.newEv+=n.length;n.forEach(x=>x._new=1);badge();if(S.page==='dashboard'||S.page==='logs'||S.page==='security')render()}}
+ a.forEach(x=>S.auditSeen.add(x.id));S.audit=a}
+function badge(){const b=$('#badge');b.style.display=S.newEv?'block':'none';b.textContent=S.newEv>99?'99+':S.newEv}
+$('#bell').onclick=()=>{S.newEv=0;badge();go('logs')};
+/* ===== Health (real measurements only) ===== */
+async function ping(){
+ const t=performance.now();
+ try{await q('system.health',{timestamp:Date.now()});S.latency=Math.round(performance.now()-t);S.health.api=true}catch{S.health.api=false;S.latency=null}
+ try{const r=await fetch(API+'/api/license/validate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({key:'NEXA-HEALTHCHECK',device_id:'nexa-panel-healthcheck'})});const j=await r.json();S.health.lic=typeof j.status==='string'}catch{S.health.lic=false}
+ try{await q('auth.me');S.health.db=S.health.api}catch{S.health.db=false}
+ const ok=S.online&&S.health.api;$('#conn').innerHTML=`<i class="dot ${ok?'ok':'bad'}"></i>${!S.online?'Offline':S.health.api?'Server '+S.latency+' ms':'Server unreachable'}`;
+ if(S.page==='dashboard')paintMon()}
+addEventListener('online',()=>{S.online=true;ping()});addEventListener('offline',()=>{S.online=false;ping()});
+/* ===== Pages ===== */
+const V=$('#view');
+function go(p){S.page=p;document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));render(true)}
+async function render(anim){
+ const fn={dashboard,users,licenses,devices,security,analytics,logs,settings,theme,about}[S.page];
+ const top=V.scrollTop;const out=await fn();V.innerHTML=out.html;if(!anim)V.scrollTop=top;
+ if(anim)gsap.from(V.children,{y:24,opacity:0,duration:.45,stagger:.06,ease:'power2.out'});
+ out.after&&out.after();bindTilt()}
+const stats=()=>{const k=S.keys,n=x=>k.filter(a=>a.status===x).length;return{total:k.length,active:n('active'),expired:n('expired'),revoked:n('revoked'),dev:k.reduce((s,a)=>s+a.usedDevices,0),cap:k.reduce((s,a)=>s+a.maxDevices,0)}};
+const statCard=(l,v,pct,k,id)=>`<div class="glass neon card stat tilt">${ic(k,'ic')}<div class="mu">${l}</div><div class="n" data-n="${v??''}" id="${id}">${v==null?'—':0}</div><div class="bar"><i data-w="${pct||0}"></i></div></div>`;
+function countUp(){document.querySelectorAll('[data-n]').forEach(e=>{const v=e.dataset.n;if(v==='')return;const o={x:0};gsap.to(o,{x:+v,duration:1.2,ease:'power2.out',onUpdate:()=>e.textContent=Math.round(o.x)})});
+ setTimeout(()=>document.querySelectorAll('.bar i').forEach(b=>b.style.width=b.dataset.w+'%'),60)}
+const evText=a=>`<b>${esc(a.action)}</b> · ${esc(a.entityType)}${a.keyPreview?' <span class="mono">'+esc(a.keyPreview)+'</span>':''}${a.details?' — '+esc(String(a.details).slice(0,90)):''}<div class="mu" style="font-size:11px">${esc(a.actorName||'system')} · ${fmt(a.createdAt)}</div>`;
+async function dashboard(){
+ try{await Promise.all([loadKeys(),loadUsers(),loadAudit()])}catch(e){return{html:errBox(e)}}
+ const s=stats(),pc=(a,b)=>b?Math.round(a/b*100):0;
+ return{html:`<h2>Dashboard</h2><div class="grid">${statCard('Total Users',S.users?S.users.length:null,100,'users')}${statCard('Active Licenses',s.active,pc(s.active,s.total),'licenses')}${statCard('Expired Licenses',s.expired,pc(s.expired,s.total),'security')}${statCard('Total Devices',s.dev,pc(s.dev,s.cap),'devices')}</div>
+ ${S.users?'':'<p class="mu" style="margin:-4px 0 12px">Total Users requires an Owner role.</p>'}
+ <div class="grid g2"><div class="glass neon card tilt"><h3>Network globe (decorative)</h3><canvas id="globe"></canvas></div>
+ <div class="glass neon card tilt"><h3>Live activity <span class="mu">· polled from audit log every 10 s</span></h3><div id="feed" style="max-height:230px;overflow:auto">${feed()}</div></div></div>
+ <h3>System monitor</h3><div class="grid" id="mon">${mon()}</div>`,after(){countUp();globe()}}}
+const feed=()=>S.audit?(S.audit.length?S.audit.slice(0,25).map(a=>`<div class="ev ${a._new?'new':''}">${evText(a)}</div>`).join(''):'<p class="mu">No events recorded yet.</p>'):'<p class="mu">Audit feed requires an Owner role.</p>';
+const mcard=(n,st,d)=>`<div class="glass card tilt"><h3>${n}</h3><div><i class="dot ${st}"></i><b>${{ok:'Operational',bad:'Failing',warn:'Unavailable'}[st]}</b></div><div class="mu" style="font-size:12px;margin-top:4px">${d}</div></div>`;
+function mon(){const h=S.health,t=v=>v==null?'warn':v?'ok':'bad';
+ return mcard('API Server',t(h.api),S.latency!=null?'tRPC round-trip '+S.latency+' ms':'Measured by ping')+mcard('Database',t(h.db),'Inferred from authenticated query')+mcard('License Service',t(h.lic),'POST /api/license/validate responds with JSON status')+
+ ['Security Module','CPU Usage','RAM Usage','Disk Usage'].map(n=>mcard(n,'warn','No server metrics endpoint exists in this backend')).join('')}
+function paintMon(){const m=$('#mon');if(m){m.innerHTML=mon();bindTilt()}}
+const errBox=e=>`<div class="glass card"><h3>Could not load data</h3><p class="err">${esc(e.message)}</p><button class="btn" onclick="render()">Retry</button></div>`;
+const badge_=s=>`<span class="pill ${s}">${s}</span>`;
+function filt(){const t=$('#gs').value.trim().toLowerCase();return t}
+async function licenses(){
+ try{await loadKeys()}catch(e){return{html:errBox(e)}}
+ const t=filt(),rows=S.keys.filter(k=>!t||(k.keyValue+k.status).toLowerCase().includes(t));
+ return{html:`<h2>License Manager</h2><div class="grid">
+ <div class="glass neon card act tilt" data-a="create"><b>＋ Create License</b><span>Generate a new key</span></div>
+ <div class="glass neon card act tilt" data-a="edit"><b>✎ Edit License</b><span>Status, expiry, device limit</span></div>
+ <div class="glass neon card act tilt" data-a="revoke"><b>⛔ Revoke License</b><span>Block a key permanently</span></div>
+ <div class="glass neon card act tilt" data-a="extend"><b>⏱ Extend License</b><span>Add time to expiry</span></div></div>
+ <div class="glass card"><h3>${rows.length} of ${S.keys.length} licenses</h3><div class="tw"><table><tr><th>ID</th><th>Key</th><th>Status</th><th>Devices</th><th>Expires</th><th></th></tr>
+ ${rows.map(k=>`<tr><td>#${k.id}</td><td class="mono">${esc(k.keyValue)}</td><td>${badge_(k.status)}</td><td>${k.usedDevices}/${k.maxDevices}</td><td>${fmt(k.expiresAt)}</td><td><button class="btn g" data-a="edit" data-id="${k.id}">Edit</button> <button class="btn g" data-a="extend" data-id="${k.id}">Extend</button> <button class="btn g" data-a="revoke" data-id="${k.id}">Revoke</button> <button class="btn d" data-a="delete" data-id="${k.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6" class="mu">No licenses.</td></tr>'}</table></div></div>`,
+ after(){V.onclick=e=>{const a=e.target.closest('[data-a]');if(a)act(a.dataset.a,+a.dataset.id||null)}}}}
+const keySel=(id,f)=>`<label>License</label><select name="id">${S.keys.filter(f||(()=>true)).map(k=>`<option value="${k.id}" ${k.id===id?'selected':''}>#${k.id} · ${esc(k.keyValue)} · ${k.status}</option>`).join('')}</select>`;
+const sel=(o,n)=>S.keys.find(k=>k.id===+$('[name=id]',o).value);
+const local=d=>{const x=new Date(d);return new Date(x-x.getTimezoneOffset()*6e4).toISOString().slice(0,16)};
+async function act(a,id){
+ const done=async(m)=>{toast(m,'ok');await loadKeys();render()};
+ if(a==='create')return modal('Create License',`<label>Duration</label><div class="row"><input name="n" type="number" min="1" value="30" style="width:40%"><select name="u" style="width:55%"><option>minutes</option><option>hours</option><option selected>days</option><option>weeks</option><option>months</option></select></div><label>Max devices</label><input name="m" type="number" min="1" max="100" value="1"><label>Custom prefix (optional)</label><input name="p" maxlength="64">`,async o=>{
+  const f=n=>$(`[name=${n}]`,o).value,r=await mu('license.create',{durationAmount:+f('n'),durationUnit:f('u'),maxDevices:+f('m'),customPrefix:f('p')||undefined});
+  await done('Server created license'+(r&&(r.keyValue||r.key)?': '+(r.keyValue||r.key):''))},'Create');
+ if(!S.keys.length)return toast('No licenses exist yet.','inf');
+ if(a==='edit'){const p=modal('Edit License',keySel(id)+`<label>Status</label><select name="s"></select><label>Expires</label><input name="e" type="datetime-local"><label>Max devices</label><input name="m" type="number" min="1" max="100">`,async o=>{
+  const f=n=>$(`[name=${n}]`,o).value;await mu('license.update',{id:+f('id'),status:f('s'),expiresAt:f('e')?new Date(f('e')).toISOString():undefined,maxDevices:+f('m')});await done('Server confirmed license update')},'Save');
+  setTimeout(()=>{const o=$('.ov');if(!o)return;const fill=()=>{const k=sel(o);$('[name=s]',o).innerHTML=['active','expired','revoked','unused'].map(x=>`<option ${x===k.status?'selected':''}>${x}</option>`).join('');$('[name=e]',o).value=k.expiresAt?local(k.expiresAt):'';$('[name=m]',o).value=k.maxDevices};$('[name=id]',o).onchange=fill;fill()},0);return p}
+ if(a==='extend')return modal('Extend License',keySel(id,k=>['active','expired'].includes(k.status))+`<label>Add</label><div class="row"><input name="n" type="number" min="1" value="30" style="width:40%"><select name="u" style="width:55%"><option value="1">days</option><option value="7">weeks</option><option value="30">months (30 d)</option></select></div><p class="mu">Revoked licenses can't be extended; use Edit to change status.</p>`,async o=>{
+  const k=sel(o);if(!k)throw new Error('No extendable license selected');const base=Math.max(Date.now(),k.expiresAt?new Date(k.expiresAt).getTime():0),add=+$('[name=n]',o).value*+$('[name=u]',o).value*864e5;
+  await mu('license.update',{id:k.id,status:'active',expiresAt:new Date(base+add).toISOString(),maxDevices:k.maxDevices});await done('Server confirmed extension')},'Extend');
+ if(a==='revoke')return modal('Revoke License',keySel(id,k=>k.status!=='revoked')+'<p class="mu">The key will stop validating immediately.</p>',async o=>{await mu('license.setStatus',{id:+$('[name=id]',o).value,status:'revoked'});await done('Server confirmed revocation')},'Revoke',true);
+ if(a==='delete'){if(await confirmBox('Permanently delete license #'+id+'? This cannot be undone.','Delete')){try{await mu('license.delete',{id});await done('Server confirmed deletion')}catch(e){toast(e.message,'err')}}}}
+async function users(){
+ if(!isOwner())return{html:'<h2>User Management</h2><div class="glass card"><p>Owner role required.</p></div>'};
+ try{await loadUsers()}catch(e){return{html:errBox(e)}}const t=filt();
+ return{html:`<h2>User Management</h2><div class="glass card"><div class="tw"><table><tr><th>ID</th><th>User</th><th>Role</th><th>Access</th><th>Last sign-in</th><th></th></tr>${S.users.filter(u=>!t||JSON.stringify(u).toLowerCase().includes(t)).map(u=>`<tr><td>#${u.id}</td><td>${esc(u.username||u.name||u.email||'—')}</td><td>${esc(u.role)}</td><td>${badge_(u.accessStatus==='active'?'active':'revoked')}</td><td>${fmt(u.lastSignedIn)}</td><td>${u.id===S.user.id||u.role==='super_owner'?'':`<button class="btn g" data-u="${u.id}" data-s="${u.accessStatus==='active'?'revoked':'active'}">${u.accessStatus==='active'?'Revoke access':'Restore'}</button>`}</td></tr>`).join('')}</table></div></div>`,
+ after(){V.onclick=async e=>{const b=e.target.closest('[data-u]');if(!b)return;if(!await confirmBox('Set access to "'+b.dataset.s+'" for user #'+b.dataset.u+'?'))return;try{await mu('users.setRole',{id:+b.dataset.u,accessStatus:b.dataset.s});toast('Server confirmed','ok');render()}catch(x){toast(x.message,'err')}}}}}
+async function devices(){
+ try{await loadKeys()}catch(e){return{html:errBox(e)}}
+ return{html:`<h2>Devices</h2><div class="glass card"><h3>Device slots per license (select a license to see bindings)</h3><div class="tw"><table><tr><th>License</th><th>Used / max</th><th>Capacity</th><th></th></tr>${S.keys.map(k=>`<tr><td class="mono">${esc(k.keyValue)}</td><td>${k.usedDevices}/${k.maxDevices}</td><td style="width:30%"><div class="bar"><i data-w="${Math.round(k.usedDevices/k.maxDevices*100)}"></i></div></td><td><button class="btn g" data-b="${k.id}">View bindings</button></td></tr>`).join('')}</table></div></div><div id="bind"></div>`,
+ after(){countUp();V.onclick=async e=>{const b=e.target.closest('[data-b]'),u=e.target.closest('[data-ub]');
+  if(b){$('#bind').innerHTML='<div class="glass card mu">Loading…</div>';try{const r=await q('dashboard.bindings',{keyId:+b.dataset.b});$('#bind').innerHTML=`<div class="glass card"><h3>Bindings for license #${b.dataset.b}</h3><div class="tw"><table><tr><th>ID</th><th>First seen</th><th>Last seen</th><th></th></tr>${r.map(x=>`<tr><td>#${x.id}</td><td>${fmt(x.firstSeenAt)}</td><td>${fmt(x.lastSeenAt)}</td><td><button class="btn d" data-ub="${x.id}">Unbind</button></td></tr>`).join('')||'<tr><td colspan=4 class=mu>No devices bound.</td></tr>'}</table></div></div>`}catch(x){$('#bind').innerHTML=errBox(x)}}
+  if(u&&await confirmBox('Unbind this device? It will need to re-validate.','Unbind'))try{await mu('license.unbind',{bindingId:+u.dataset.ub});toast('Server confirmed unbind','ok');render()}catch(x){toast(x.message,'err')}}}}}
+const secRx=/revoke|delete|unbind|fail|denied|role|referral|reset/i;
+async function security(){
+ if(!isOwner())return{html:'<h2>Security</h2><div class="glass card"><p>Owner role required.</p></div>'};
+ try{await loadAudit()}catch(e){return{html:errBox(e)}}const l=S.audit.filter(a=>secRx.test(a.action));
+ return{html:`<h2>Security</h2><div class="glass card"><h3>Security-relevant audit events (${l.length})</h3>${l.map(a=>`<div class="ev ${a._new?'new':''}">${evText(a)}</div>`).join('')||'<p class="mu">None recorded.</p>'}</div>`}}
+async function logs(){
+ if(!isOwner())return{html:'<h2>Logs</h2><div class="glass card"><p>Owner role required.</p></div>'};
+ try{await loadAudit()}catch(e){return{html:errBox(e)}}const t=filt();
+ return{html:`<h2>Logs</h2><div class="glass card"><div class="tw"><table><tr><th>Time</th><th>Actor</th><th>Action</th><th>Entity</th><th>Key</th><th>Details</th></tr>${S.audit.filter(a=>!t||JSON.stringify(a).toLowerCase().includes(t)).map(a=>`<tr><td>${fmt(a.createdAt)}</td><td>${esc(a.actorName||'system')}</td><td>${esc(a.action)}</td><td>${esc(a.entityType)}</td><td class="mono">${esc(a.keyPreview||'')}</td><td>${esc(String(a.details||'').slice(0,80))}</td></tr>`).join('')}</table></div></div>`}}
+/* Analytics: bucketed client-side from real timestamps */
+const RD={'7D':[7,1],'30D':[30,1],'90D':[90,3],'1Y':[365,15]};let ch;
+function series(dates,r){const[d,step]=RD[r],n=Math.ceil(d/step),end=Date.now(),b=Array(n).fill(0),ms=step*864e5;
+ dates.forEach(x=>{const t=new Date(x).getTime(),i=n-1-Math.floor((end-t)/ms);if(i>=0&&i<n)b[i]++});
+ return{labels:b.map((_,i)=>new Date(end-(n-1-i)*ms).toLocaleDateString(undefined,{month:'short',day:'numeric'})),data:b}}
+async function analytics(){
+ try{await Promise.all([loadKeys(),loadUsers(),loadAudit()])}catch(e){return{html:errBox(e)}}
+ return{html:`<h2>Analytics</h2><div class="glass neon card"><div class="row" style="justify-content:space-between"><div class="row" id="rg">${Object.keys(RD).map(r=>`<button class="btn ${r===S.range?'':'g'}" data-r="${r}">${r}</button>`).join('')}</div><select id="ds" style="width:auto"><option value="lic">License analytics</option><option value="usr">Users analytics</option><option value="dev">Device analytics</option></select></div><div class="chartbox"><canvas id="ch"></canvas></div><p class="mu" id="cn"></p></div>`,
+ after(){const draw=async()=>{const k=$('#ds').value;let sets=[],note='';
+  if(k==='lic'){sets=[['Created',S.keys.map(x=>x.createdAt),'#00e5ff'],['Activated',S.keys.filter(x=>x.activatedAt).map(x=>x.activatedAt),'#22ff9a']];note='Counts of real license create/activation timestamps.'}
+  if(k==='usr'){if(!S.users){note='Owner role required.'}else{sets=[['Users signed in',S.users.map(x=>x.lastSignedIn).filter(Boolean),'#a855f7']];note='Backend exposes last sign-in only, not registration date.'}}
+  if(k==='dev'){note='Loading bindings…';$('#cn').textContent=note;try{const all=(await Promise.all(S.keys.slice(0,100).map(x=>q('dashboard.bindings',{keyId:x.id})))).flat();sets=[['Devices first seen',all.map(x=>x.firstSeenAt),'#3b82f6']];note='First-seen time of real device bindings'+(S.keys.length>100?' (first 100 licenses)':'')+'.'}catch(e){note=e.message}}
+  $('#cn').textContent=note;ch&&ch.destroy();const s0=sets.length?series(sets[0][1],S.range):{labels:[]};
+  ch=new Chart($('#ch'),{type:'line',data:{labels:s0.labels,datasets:sets.map(([l,d,c])=>({label:l,data:series(d,S.range).data,borderColor:c,backgroundColor:c+'22',fill:true,tension:.4,pointRadius:2,pointHoverRadius:6}))},options:{maintainAspectRatio:false,animation:{duration:900},interaction:{mode:'index',intersect:false},scales:{x:{ticks:{color:'#8fa3c8',maxTicksLimit:8},grid:{color:'#ffffff0a'}},y:{beginAtZero:true,ticks:{color:'#8fa3c8',precision:0},grid:{color:'#ffffff0a'}}},plugins:{legend:{labels:{color:'#e6f0ff'}},tooltip:{backgroundColor:'#0b1233',borderColor:'#00e5ff',borderWidth:1}}}})};
+  $('#ds').onchange=draw;$('#rg').onclick=e=>{const b=e.target.closest('[data-r]');if(b){S.range=b.dataset.r;[...$('#rg').children].forEach(x=>x.classList.toggle('g',x!==b));draw()}};draw()}}}
+async function settings(){return{html:`<h2>Settings</h2><div class="glass card"><h3>Account</h3><p>${esc(S.user.username||S.user.name||'')} · role <b>${esc(S.user.role)}</b></p><div class="row" style="margin-top:12px"><button class="btn d" id="lo">Sign out</button></div></div><div class="glass card" style="margin-top:12px"><h3>Connection</h3><p class="mu">API base: ${esc(API||location.origin)} · live feed polls every 10 s</p></div>`,after(){$('#lo').onclick=async()=>{try{await mu('auth.logout');S.user=null;location.reload()}catch(e){toast(e.message,'err')}}}}}
+const accents={Cyan:['#00e5ff','#3b82f6','#a855f7'],Green:['#22ff9a','#06b6d4','#3b82f6'],Purple:['#c084fc','#a855f7','#3b82f6']};
+async function theme(){return{html:`<h2>Theme</h2><div class="glass card"><h3>Accent</h3><div class="row">${Object.keys(accents).map(n=>`<button class="btn g" data-t="${n}">${n}</button>`).join('')}</div><label class="row" style="margin-top:14px"><input type="checkbox" id="pt" style="width:auto" ${S.noPart?'':'checked'}> Particle background</label></div>`,
+ after(){V.onclick=e=>{const b=e.target.closest('[data-t]');if(b){const a=accents[b.dataset.t],s=document.documentElement.style;s.setProperty('--c1',a[0]);s.setProperty('--c2',a[1]);s.setProperty('--c3',a[2])}};$('#pt').onchange=e=>{S.noPart=!e.target.checked;$('#bg').style.display=S.noPart?'none':''}}}}
+async function about(){return{html:`<h2>About</h2><div class="glass neon card tilt"><h3>NEXA License Control Panel</h3><p>Front-end for the panel's tRPC API (<span class="mono">/api/trpc</span>) with cookie-session sign-in. All figures, tables and events come from the server; operations report success only after the server confirms.</p><p class="mu" style="margin-top:8px">Not available from this backend: CPU/RAM/disk metrics, push events (feed is polled), registration timestamps.</p></div>`}}
+$('#gs').oninput=()=>['licenses','users','logs'].includes(S.page)&&render();
+/* ===== 3D: tilt (mouse + touch), particles, globe ===== */
+let tiltBound=false;
+function bindTilt(){if(tiltBound)return;tiltBound=true;
+ const mv=e=>{const c=e.target.closest&&e.target.closest('.tilt');if(!c)return;const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+  c.style.transform=`rotateX(${(.5-y)*14}deg) rotateY(${(x-.5)*14}deg) translateZ(8px)`;c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%')};
+ const rs=e=>document.querySelectorAll('.tilt').forEach(c=>c.style.transform='');
+ V.addEventListener('pointermove',mv);V.addEventListener('pointerleave',rs);V.addEventListener('pointerup',rs);V.addEventListener('pointercancel',rs);
+ V.addEventListener('scroll',()=>{$('#bg').style.transform=`translateY(${-V.scrollTop*.05}px)`},{passive:true})}
+let pr,ps,pc,pp;
+function particles(){const cv=$('#bg');pr=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:false});pr.setPixelRatio(Math.min(devicePixelRatio,1.5));
+ ps=new THREE.Scene();pc=new THREE.PerspectiveCamera(60,1,1,1000);pc.position.z=300;const n=innerWidth<760?250:600,p=new Float32Array(n*3);for(let i=0;i<p.length;i++)p[i]=(Math.random()-.5)*700;
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));pp=new THREE.Points(g,new THREE.PointsMaterial({color:0x00e5ff,size:2,transparent:true,opacity:.7}));ps.add(pp);
+ const rz=()=>{pr.setSize(innerWidth,innerHeight);pc.aspect=innerWidth/innerHeight;pc.updateProjectionMatrix()};rz();addEventListener('resize',rz);
+ let mx=0;addEventListener('pointermove',e=>mx=(e.clientX/innerWidth-.5));
+ (function t(){requestAnimationFrame(t);if(document.hidden||S.noPart)return;pp.rotation.y+=.0006;pp.rotation.x+=(mx*.2-pp.rotation.x)*.02;pr.render(ps,pc)})()}
+let gr;function globe(){const cv=$('#globe');if(!cv)return;gr&&gr.dispose();const r=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true});gr=r;const w=cv.clientWidth,h=230;r.setSize(w,h,false);r.setPixelRatio(Math.min(devicePixelRatio,2));
+ const s=new THREE.Scene(),c=new THREE.PerspectiveCamera(45,w/h,.1,100);c.position.z=3.2;const grp=new THREE.Group();s.add(grp);
+ grp.add(new THREE.Mesh(new THREE.SphereGeometry(1,28,18),new THREE.MeshBasicMaterial({color:0x00e5ff,wireframe:true,transparent:true,opacity:.25})));
+ grp.add(new THREE.Mesh(new THREE.SphereGeometry(.98,32,20),new THREE.MeshBasicMaterial({color:0x0a1440,transparent:true,opacity:.7})));
+ const pts=new Float32Array(120*3);for(let i=0;i<120;i++){const a=Math.random()*6.283,b=Math.acos(2*Math.random()-1);pts.set([1.02*Math.sin(b)*Math.cos(a),1.02*Math.cos(b),1.02*Math.sin(b)*Math.sin(a)],i*3)}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pts,3));grp.add(new THREE.Points(g,new THREE.PointsMaterial({color:0x22ff9a,size:.04})));
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(1.35,.006,8,100),new THREE.MeshBasicMaterial({color:0xa855f7}));ring.rotation.x=1.2;s.add(ring);
+ (function t(){if(!cv.isConnected||gr!==r)return r.dispose();requestAnimationFrame(t);grp.rotation.y+=.004;ring.rotation.z+=.006;r.render(s,c)})()}
+/* ===== Boot ===== */
+async function boot(){
+ particles();
+ try{S.user=await q('auth.me')}catch(e){$('#lt').textContent='Server unreachable: '+e.message}
+ if(S.user){await start()}else{$('#load').style.display='none';$('#login').style.display='grid'}}
+$('#lf').onsubmit=async e=>{e.preventDefault();const b=$('#lb');b.disabled=true;b.textContent='Authenticating…';$('#le').textContent='';
+ try{await mu('auth.login',{username:$('#lu').value,password:$('#lp').value});const u=await q('auth.me');if(!u)throw new Error('Login was not confirmed by the server');S.user=u;$('#login').style.display='none';await start()}
+ catch(x){$('#le').textContent=x.code==='UNAUTHORIZED'?'Invalid username or password':x.code==='TOO_MANY_REQUESTS'?'Too many attempts — wait and retry':x.message}b.disabled=false;b.textContent='Sign in'};
+async function start(){
+ $('#prof').textContent=(S.user.username||S.user.name||'Admin')+' · '+S.user.role;$('#app').style.visibility='visible';
+ go('dashboard');await ping();$('#load').style.display='none';gsap.from('#sb,header',{opacity:0,y:-14,duration:.6,stagger:.1});
+ setInterval(()=>{ping()},15000);setInterval(()=>{if(!document.hidden)loadAudit(true).catch(()=>{})},10000)}
+boot();
+</script></body></html>
