@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { SignJWT, jwtVerify } from "jose";
 
-import { getUserByOpenId, getUserByUsername } from "./db";
+import { createLocalUser, getUserByOpenId, getUserByUsername } from "./db";
 import { getActiveServerMaintenance } from "./maintenance";
 import {
   getActiveSystemAnnouncement,
@@ -11,7 +11,7 @@ import {
   unbindDevice,
   validateCanonicalLicense,
 } from "./license";
-import { verifyPassword } from "./passwordAuth";
+import { hashPassword, verifyPassword } from "./passwordAuth";
 import { ENV } from "./_core/env";
 import type { User } from "../drizzle/schema";
 
@@ -75,6 +75,22 @@ export function registerMobileRoutes(app: Express) {
       .setExpirationTime("30d")
       .sign(new TextEncoder().encode(ENV.cookieSecret));
     return res.json({ success: true, token, user: publicUser(user) });
+  });
+
+  app.post("/api/mobile/register", async (req, res) => {
+    const username = typeof req.body?.username === "string" ? req.body.username.trim() : "";
+    const password = typeof req.body?.password === "string" ? req.body.password : "";
+    if (!/^[A-Za-z0-9](?:[A-Za-z0-9 _.-]{1,30}[A-Za-z0-9])?$/.test(username)) {
+      return res.status(400).json({ success: false, error: "username_must_be_3_to_32_characters" });
+    }
+    if (password.length < 8) return res.status(400).json({ success: false, error: "password_must_be_at_least_8_characters" });
+    if (await getUserByUsername(username)) return res.status(409).json({ success: false, error: "username_already_exists" });
+    try {
+      const user = await createLocalUser(username, hashPassword(password));
+      return res.status(201).json({ success: true, user: publicUser(user), message: "Registration submitted. An owner may need to activate this account before management access is available." });
+    } catch {
+      return res.status(500).json({ success: false, error: "registration_unavailable" });
+    }
   });
 
   app.get("/api/mobile/me", requireUser(async (_req, res, user) => {
